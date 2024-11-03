@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package  checkout;
+package checkout;
 
-import "github.com/jichenssg/tik-mall/payment";
+import "payment.proto";
 
-option go_package = "github.com/jichenssg/tik-mall/checkout";
+option go_package = "/checkout";
 
 service CheckoutService {
   rpc Checkout(CheckoutReq) returns (CheckoutResp) {}

@@ -17,10 +17,6 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
-# Go workspace file
-go.work
-go.work.sum
-
 # env file
 .env
 
@@ -36,7 +32,5 @@ go.work.sum
 
 # Built Visual Studio Code Extensions
 *.vsix
-
-rpc_gen/*
 
 .vscode/

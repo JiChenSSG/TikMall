@@ -2,7 +2,7 @@ syntax="proto3";
 
 package user;
 
-option go_package="github.com/jichenssg/tik-mall/user";
+option go_package = "/user";
 
 service UserService {
     rpc Register(RegisterReq) returns (RegisterResp) {}
