@@ -38,3 +38,5 @@ go.work.sum
 *.vsix
 
 rpc_gen/*
+
+.vscode/
