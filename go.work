@@ -2,5 +2,6 @@ go 1.22.2
 
 use (
 	./app/auth
-	./rpc_gen
+	./gateway
+	./gen
 )

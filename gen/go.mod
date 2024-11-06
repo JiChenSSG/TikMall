@@ -1,10 +1,12 @@
-module github.com/jichenssg/tikmall/app/auth
+module github.com/jichenssg/tikmall/gen
 
 go 1.22.2
 
-replace github.com/jichenssg/tikmall/gen => ../../gen
-
-require github.com/jichenssg/tikmall/gen v0.0.0-00010101000000-000000000000
+require (
+	github.com/cloudwego/fastpb v0.0.5
+	github.com/cloudwego/kitex v0.11.3
+	google.golang.org/protobuf v1.35.1
+)
 
 require (
 	github.com/apache/thrift v0.13.0 // indirect
@@ -14,11 +16,9 @@ require (
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/configmanager v0.2.2 // indirect
 	github.com/cloudwego/dynamicgo v0.4.0 // indirect
-	github.com/cloudwego/fastpb v0.0.5 // indirect
 	github.com/cloudwego/frugal v0.2.0 // indirect
 	github.com/cloudwego/gopkg v0.1.2 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
-	github.com/cloudwego/kitex v0.11.3 // indirect
 	github.com/cloudwego/localsession v0.0.2 // indirect
 	github.com/cloudwego/netpoll v0.6.4 // indirect
 	github.com/cloudwego/runtimex v0.1.0 // indirect
@@ -46,6 +46,5 @@ require (
 	golang.org/x/sys v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/genproto v0.0.0-20210513213006-bf773b8c8384 // indirect
-	google.golang.org/protobuf v1.35.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

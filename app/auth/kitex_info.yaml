@@ -1,3 +1,4 @@
 kitexinfo:
-  ServiceName: 'auth'
-  ToolVersion: 'v0.9.1'
+   ServiceName: 'auth'
+   ToolVersion: 'v0.11.3'
+
