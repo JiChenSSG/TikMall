@@ -38,7 +38,9 @@ func Login(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(common.Response)
+	resp := &common.Response{
+		Message: "Login success",
+	}
 
 	c.JSON(consts.StatusOK, resp)
 }
