@@ -8,26 +8,37 @@ import "frontend/common.proto";
 option go_package = "/frontend/user";
 
 message RegisterReq {
-	string email = 1 [(api.form) = "email"];
-	string password = 2 [(api.form) = "password"];
-	string confirm_password = 3 [(api.form) = "confirm_password"];
-  }
-  
-  message LoginReq {
-	string email = 1 [(api.form) = "email"];
-	string password = 2 [(api.form) = "password"];
-  }
-  
-  service AuthService {
-	rpc register(RegisterReq) returns (common.Response) {
-	  option (api.post) = "/auth/register";
-	}
+  string email = 1 [ (api.form) = "email" ];
+  string password = 2 [ (api.form) = "password" ];
+  string confirm_password = 3 [ (api.form) = "confirm_password" ];
+}
 
-	rpc login(LoginReq) returns (common.Response) {
-	  option (api.post) = "/auth/login";
-	}
+message RegisterResp {
+  string message = 1;
+  int64 user_id = 2;
+}
 
-	rpc logout(common.Empty) returns (common.Response) {
-	  option (api.post) = "/auth/logout";
-	}
+message LoginReq {
+  string email = 1 [ (api.form) = "email" ];
+  string password = 2 [ (api.form) = "password" ];
+}
+
+message LoginResp {
+  string message = 1;
+  int64 user_id = 2;
+}
+
+
+service AuthService {
+  rpc register(RegisterReq) returns (RegisterResp) {
+    option (api.post) = "/auth/register";
   }
+
+  rpc login(LoginReq) returns (LoginReq) {
+    option (api.post) = "/auth/login";
+  }
+
+  rpc logout(common.Empty) returns (common.Response) {
+    option (api.post) = "/auth/logout";
+  }
+}

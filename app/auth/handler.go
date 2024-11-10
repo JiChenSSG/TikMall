@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+
+	"github.com/cloudwego/kitex/pkg/klog"
 	auth "github.com/jichenssg/tikmall/gen/kitex_gen/auth"
 )
 
@@ -17,5 +19,10 @@ func (s *AuthServiceImpl) DeliverTokenByRPC(ctx context.Context, req *auth.Deliv
 // VerifyTokenByRPC implements the AuthServiceImpl interface.
 func (s *AuthServiceImpl) VerifyTokenByRPC(ctx context.Context, req *auth.VerifyTokenReq) (resp *auth.VerifyResp, err error) {
 	// TODO: Your code here...
+	klog.Infof("VerifyTokenByRPC, req: %v", req)
+	resp = &auth.VerifyResp{
+		Res: true,
+	}
+	
 	return
 }

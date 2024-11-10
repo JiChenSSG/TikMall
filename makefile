@@ -9,8 +9,12 @@ help: ## Display this help.
 
 ##@ Initialize Project
 .PHONY: init
-init: ## Just copy `.env.example` to `.env` with one click, executed once.
+init:
 	@docker-compose up -d
+
+.PHONY: init-env
+init-env: ## Just copy `.env.example` to `.env` with one click,
+	@./scripts/copy_env.sh
 
 ##@ Build
 
