@@ -1,0 +1,17 @@
+consul:
+  host: 127.0.0.1
+  port: 8500
+kitex:
+  log_level: debug
+  log_file_name: "log/kitex.log"
+  log_max_size: 10
+  log_max_age: 3
+  log_max_backups: 50
+server:
+  port: 8080
+  name: gateway
+endpoint:
+  auth: "auth"
+telemetry:
+  host: 127.0.0.1
+  port: 4317

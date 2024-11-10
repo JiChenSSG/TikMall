@@ -17,12 +17,12 @@ if [ "$isFrontend" = 0 ]; then
 	cd app/${svc}
 	kitex -I ./../../idl -module "github.com/jichenssg/tikmall/app/auth" -service ${svc} -use "github.com/jichenssg/tikmall/gen/kitex_gen" ./../../idl/${svc}.proto
 else
-	cd gateway
+	cd app/gateway
 	# check if frontend folder exists
 	if [ ! -f ".hz" ]; then
-		hz new -I ./../idl -module "github.com/jichenssg/tikmall/gateway" -idl ./../idl/frontend/${svc}_f.proto
+		hz new -I ./../../idl -module "github.com/jichenssg/tikmall/gateway" -idl ./../../idl/frontend/${svc}_f.proto
 	fi
-		hz update -I ./../idl -idl ./../idl/frontend/${svc}_f.proto
+		hz update -I ./../../idl -idl ./../../idl/frontend/${svc}_f.proto
 
 fi
 

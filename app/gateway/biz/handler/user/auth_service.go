@@ -7,8 +7,11 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/cloudwego/kitex/pkg/klog"
 	common "github.com/jichenssg/tikmall/gateway/biz/model/frontend/common"
 	user "github.com/jichenssg/tikmall/gateway/biz/model/frontend/user"
+	"github.com/jichenssg/tikmall/gateway/client"
+	"github.com/jichenssg/tikmall/gen/kitex_gen/auth"
 )
 
 // Register .
@@ -34,13 +37,48 @@ func Login(ctx context.Context, c *app.RequestContext) {
 	var req user.LoginReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		c.JSON(consts.StatusInternalServerError, &user.LoginResp{
+			Message: err.Error(),
+		})
+
 		return
 	}
 
-	resp := new(common.Response)
+	authc, err := client.GetAuthClient()
+	if err != nil {
+		klog.CtxErrorf(ctx, "fail to get auth client", err)
+		c.JSON(consts.StatusInternalServerError, &user.LoginResp{
+			Message: err.Error(),
+		})
 
-	c.JSON(consts.StatusOK, resp)
+		return
+	}
+
+	resp, err := authc.VerifyTokenByRPC(ctx, &auth.VerifyTokenReq{
+		Token: "123",
+	})
+
+	if err != nil {
+		klog.CtxErrorf(ctx, "fail to verify token by rpc", err)
+		c.JSON(consts.StatusInternalServerError, &user.LoginResp{
+			Message: err.Error(),
+		})
+
+		return
+	}
+
+	if !resp.Res {
+		c.JSON(consts.StatusUnauthorized, &user.LoginResp{
+			Message: "login failed",
+		})
+
+		return
+	}
+
+	c.JSON(consts.StatusOK, &user.LoginResp{
+		Message: "login success",
+
+	})
 }
 
 // Logout .
