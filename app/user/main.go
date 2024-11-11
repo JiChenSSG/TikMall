@@ -9,7 +9,7 @@ import (
 	"github.com/cloudwego/kitex/server"
 	"github.com/jichenssg/tikmall/app/auth/config"
 	"github.com/jichenssg/tikmall/app/common/obs"
-	auth "github.com/jichenssg/tikmall/gen/kitex_gen/auth/authservice"
+	user "github.com/jichenssg/tikmall/gen/kitex_gen/user/userservice"
 	consul "github.com/kitex-contrib/registry-consul"
 	"github.com/natefinch/lumberjack"
 
@@ -45,8 +45,8 @@ func kitexInit() {
 		return
 	}
 
-	svr := auth.NewServer(
-		new(AuthServiceImpl),
+	svr := user.NewServer(
+		new(UserServiceImpl),
 		server.WithRegistry(r),
 		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
 			ServiceName: config.GetConf().Server.Name,

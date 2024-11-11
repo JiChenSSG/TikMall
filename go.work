@@ -2,7 +2,8 @@ go 1.22.2
 
 use (
 	./app/auth
-	./app/gateway
 	./app/common
+	./app/gateway
+	./app/user
 	./gen
 )

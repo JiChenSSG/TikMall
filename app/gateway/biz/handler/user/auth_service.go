@@ -77,7 +77,6 @@ func Login(ctx context.Context, c *app.RequestContext) {
 
 	c.JSON(consts.StatusOK, &user.LoginResp{
 		Message: "login success",
-
 	})
 }
 
@@ -93,6 +92,38 @@ func Logout(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(common.Response)
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// Info .
+// @router /auth/info [GET]
+func Info(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.InfoReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(user.InfoResp)
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// Delete .
+// @router /auth/delete [DELETE]
+func Delete(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.DeleteReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(user.DeleteResp)
 
 	c.JSON(consts.StatusOK, resp)
 }
