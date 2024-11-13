@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+
+	"github.com/cloudwego/kitex/pkg/klog"
 	user "github.com/jichenssg/tikmall/gen/kitex_gen/user"
 )
 
@@ -11,6 +13,7 @@ type UserServiceImpl struct{}
 // Register implements the UserServiceImpl interface.
 func (s *UserServiceImpl) Register(ctx context.Context, req *user.RegisterReq) (resp *user.RegisterResp, err error) {
 	// TODO: Your code here...
+	klog.Info("Register")
 	return
 }
 

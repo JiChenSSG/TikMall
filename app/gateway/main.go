@@ -3,37 +3,56 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
+	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
 	"github.com/cloudwego/hertz/pkg/app/server"
-	"github.com/cloudwego/kitex/pkg/klog"
-	"github.com/jichenssg/tikmall/app/common/obs"
+	"github.com/jichenssg/tikmall/gateway/client"
 	"github.com/jichenssg/tikmall/gateway/config"
-	"github.com/natefinch/lumberjack"
+	"github.com/jichenssg/tikmall/gateway/obs"
+
+	"github.com/hertz-contrib/cors"
+	hertzprom "github.com/hertz-contrib/monitor-prometheus"
+	hertzotelprovider "github.com/hertz-contrib/obs-opentelemetry/provider"
+	hertzoteltracing "github.com/hertz-contrib/obs-opentelemetry/tracing"
+	oteltrace "go.opentelemetry.io/otel/trace"
 )
 
 func main() {
-	config.GetConf()
+	obs.Init()
+	client.Init()
 
-	obs.InitLog(&lumberjack.Logger{
-		Filename:   config.GetConf().Kitex.LogFileName,
-		MaxSize:    config.GetConf().Kitex.LogMaxSize,
-		MaxBackups: config.GetConf().Kitex.LogMaxBackups,
-		MaxAge:     config.GetConf().Kitex.LogMaxAge,
-	}, config.LogLevel())
+	p := hertzotelprovider.NewOpenTelemetryProvider(
+		hertzotelprovider.WithSdkTracerProvider(obs.TracerProvider),
+		hertzotelprovider.WithEnableMetrics(false),
+	)
+	defer p.Shutdown(context.Background())
+	tracer, cfg := hertzoteltracing.NewServerTracer(hertzoteltracing.WithCustomResponseHandler(func(ctx context.Context, c *app.RequestContext) {
+		c.Header("shop-trace-id", oteltrace.SpanFromContext(ctx).SpanContext().TraceID().String())
+	}))
 
-	klog.Info("Starting gateway server...")
-
-	obs.InitTrack(config.GetConf().Server.Name, fmt.Sprintf("%v:%v", config.GetConf().Telemetry.Host, config.GetConf().Telemetry.Port))
-
-	hertzInit()
-}
-
-func hertzInit() {
-	h := server.New(
+	h := server.Default(
 		server.WithHostPorts(fmt.Sprintf(":%v", config.GetConf().Server.Port)),
+		server.WithTracer(
+			hertzprom.NewServerTracer(
+				"",
+				"",
+				hertzprom.WithRegistry(obs.Registry),
+				hertzprom.WithDisableServer(true),
+			),
+		),
+		tracer,
 	)
 
+	h.Use(hertzoteltracing.ServerMiddleware(cfg))
+	h.Use(recovery.Recovery())
+	h.Use(cors.Default())
+
 	register(h)
+
+	h.OnShutdown = append(h.OnShutdown, obs.Hooks...)
+
 	h.Spin()
 }

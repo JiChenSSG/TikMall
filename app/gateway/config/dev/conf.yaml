@@ -8,6 +8,7 @@ kitex:
   log_max_age: 3
   log_max_backups: 50
 server:
+  host: 127.0.0.1
   port: 8080
   name: gateway
 endpoint:
@@ -15,3 +16,5 @@ endpoint:
 telemetry:
   host: 127.0.0.1
   port: 4317
+metrics:
+  port: 8079
