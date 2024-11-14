@@ -7,6 +7,7 @@ import (
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/jichenssg/tikmall/app/user/dal/model"
 	"github.com/jichenssg/tikmall/app/user/dal/mysql"
+	"github.com/jichenssg/tikmall/app/user/utils"
 	"github.com/jichenssg/tikmall/gen/kitex_gen/user"
 	userrpc "github.com/jichenssg/tikmall/gen/kitex_gen/user"
 )
@@ -26,7 +27,7 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *userrpc.RegisterReq
 
 	user := &model.User{
 		Username: req.Username,
-		Password: req.Password,
+		Password: utils.String2MD5(req.Password),
 		Email:    req.Email,
 	}
 
@@ -45,25 +46,85 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *userrpc.RegisterReq
 }
 
 // Login implements the UserServiceImpl interface.
-func (s *UserServiceImpl) Login(ctx context.Context, req *user.LoginReq) (resp *user.LoginResp, err error) {
-	// TODO: Your code here...
+func (s *UserServiceImpl) Login(ctx context.Context, req *user.LoginReq) (resp *userrpc.LoginResp, err error) {
+	klog.Info("User Login")
+
+	user, err := model.GetUserByEmail(mysql.GetDB(), ctx, req.Email)
+	if err != nil {
+		err = kerrors.NewBizStatusError(500, "user not found")
+		return nil, err
+	}
+
+	if user.Password != utils.String2MD5(req.Password) {
+		err = kerrors.NewBizStatusError(500, "password incorrect")
+		return nil, err
+	}
+
+	resp = &userrpc.LoginResp{
+		UserId:  user.ID,
+		Success: true,
+	}
+
 	return
 }
 
 // Info implements the UserServiceImpl interface.
-func (s *UserServiceImpl) Info(ctx context.Context, req *user.InfoReq) (resp *user.InfoResp, err error) {
-	// TODO: Your code here...
+func (s *UserServiceImpl) Info(ctx context.Context, req *user.InfoReq) (resp *userrpc.InfoResp, err error) {
+	klog.Info("User Info")
+
+	user, err := model.GetUserByID(mysql.GetDB(), ctx, req.UserId)
+	if err != nil {
+		err = kerrors.NewBizStatusError(500, err.Error())
+		return nil, err
+	}
+
+	resp = &userrpc.InfoResp{
+		UserId:   user.ID,
+		Username: user.Username,
+		Email:    user.Email,
+	}
+
 	return
 }
 
 // Delete implements the UserServiceImpl interface.
-func (s *UserServiceImpl) Delete(ctx context.Context, req *user.DeleteReq) (resp *user.DeleteResp, err error) {
-	// TODO: Your code here...
+func (s *UserServiceImpl) Delete(ctx context.Context, req *user.DeleteReq) (resp *userrpc.DeleteResp, err error) {
+	klog.Info("User Delete")
+
+	err = model.DeleteUser(mysql.GetDB(), ctx, req.UserId)
+	if err != nil {
+		err = kerrors.NewBizStatusError(500, err.Error())
+		return nil, err
+	}
+
+	resp = &userrpc.DeleteResp{
+		Success: true,
+	}
+
+
+
 	return
 }
 
 // Update implements the UserServiceImpl interface.
-func (s *UserServiceImpl) Update(ctx context.Context, req *user.UpdateReq) (resp *user.UpdateResp, err error) {
-	// TODO: Your code here...
-	return
+func (s *UserServiceImpl) Update(ctx context.Context, req *user.UpdateReq) (resp *userrpc.UpdateResp, err error) {
+	klog.Info("User Update")
+
+	user := &model.User{
+		ID:       req.UserId,
+		Username: req.Username,
+		Email:    req.Email,
+	}
+
+	_, err = model.UpdateUser(mysql.GetDB(), ctx, user)
+	if err != nil {
+		err = kerrors.NewBizStatusError(500, err.Error())
+		return nil, err
+	}
+
+	resp = &userrpc.UpdateResp{
+		Success: true,
+	}
+
+	return resp, nil
 }
