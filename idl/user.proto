@@ -20,7 +20,7 @@ message RegisterReq {
 }
 
 message RegisterResp {
-    int32 user_id = 1;
+    int64 user_id = 1;
 	bool success = 2;
 }
 
@@ -30,22 +30,22 @@ message LoginReq {
 }
 
 message LoginResp {
-    int32 user_id = 1;
+    int64 user_id = 1;
 	bool success = 2;
 }
 
 message InfoReq {
-	int32 user_id = 1;
+	int64 user_id = 1;
 }
 
 message InfoResp {
-	int32 user_id = 1;
+	int64 user_id = 1;
 	string username = 2;
 	string email = 3;
 }
 
 message DeleteReq {
-	int32 user_id = 1;
+	int64 user_id = 1;
 }
 
 message DeleteResp {
@@ -53,7 +53,7 @@ message DeleteResp {
 }
 
 message UpdateReq {
-	int32 user_id = 1;
+	int64 user_id = 1;
 	string username = 2;
 	string email = 3;
 	string password = 4;
@@ -64,7 +64,7 @@ message UpdateResp {
 }
 
 message User {
-	int32 id = 1;
+	int64 id = 1;
 	string username = 2;
 	string email = 3;
 	string password = 4;

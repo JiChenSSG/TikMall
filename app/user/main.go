@@ -7,6 +7,7 @@ import (
 	"github.com/cloudwego/kitex/server"
 	"github.com/jichenssg/tikmall/app/common/obs"
 	"github.com/jichenssg/tikmall/app/user/config"
+	"github.com/jichenssg/tikmall/app/user/dal/mysql"
 	user "github.com/jichenssg/tikmall/gen/kitex_gen/user/userservice"
 	"github.com/kanhai-syd/hailog/logging"
 	"github.com/natefinch/lumberjack"
@@ -32,6 +33,8 @@ func main() {
 		MaxBackups: config.GetConf().Kitex.LogMaxBackups,
 		MaxAge:     config.GetConf().Kitex.LogMaxAge,
 	}, config.LogLevel())
+
+	mysql.Init()
 
 	klog.Infof("Starting service %v", config.GetConf().Server.Name)
 

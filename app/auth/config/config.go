@@ -19,6 +19,7 @@ type Config struct {
 	Consul    Consul    `yaml:"consul"`
 	Server    Server    `yaml:"server"`
 	Telemetry Telemetry `yaml:"telemetry"`
+	Metrics   Metrics   `yaml:"metrics"`
 }
 
 type Kitex struct {
@@ -43,6 +44,10 @@ type Server struct {
 type Telemetry struct {
 	Host string `yaml:"host"`
 	Port int    `yaml:"port"`
+}
+
+type Metrics struct {
+	Port int `yaml:"port"`
 }
 
 var (

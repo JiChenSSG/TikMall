@@ -8,48 +8,89 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/cloudwego/kitex/pkg/kerrors"
 	common "github.com/jichenssg/tikmall/gateway/biz/model/frontend/common"
 	user "github.com/jichenssg/tikmall/gateway/biz/model/frontend/user"
 	"github.com/jichenssg/tikmall/gateway/client"
 
-	userclient "github.com/jichenssg/tikmall/gen/kitex_gen/user"
+	userrpc "github.com/jichenssg/tikmall/gen/kitex_gen/user"
 )
 
 // Register .
 // @router /auth/register [POST]
 func Register(ctx context.Context, c *app.RequestContext) {
+	hlog.Infof("User Register")
+
 	var err error
 	var req user.RegisterReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		hlog.Errorf("Register error: %v", err)
+		c.JSON(consts.StatusBadRequest, &user.RegisterResp{
+			Message: err.Error(),
+		})
+
 		return
 	}
 
-	hlog.CtxInfof(ctx, "Register")
-
-	client := client.UserClient
-	resp, err := client.Register(ctx, &userclient.RegisterReq{
-		Email:           req.Email,
+	userclient := client.UserClient
+	resp, err := userclient.Register(ctx, &userrpc.RegisterReq{
+		Username:        req.Username,
 		Password:        req.Password,
 		ConfirmPassword: req.ConfirmPassword,
+		Email:           req.Email,
 	})
 
 	if err != nil {
-		c.String(consts.StatusInternalServerError, err.Error())
+		bizErr, isBizErr := kerrors.FromBizStatusError(err)
+		if isBizErr {
+			hlog.Errorf("Register biz error: %v", bizErr)
+			c.JSON(int(bizErr.BizStatusCode()), &user.RegisterResp{
+				Message: bizErr.BizMessage(),
+			})
+
+			return
+		}
+
+		hlog.Errorf("Register rpc error: %v", err)
+		c.JSON(consts.StatusInternalServerError, &user.RegisterResp{
+			Message: err.Error(),
+		})
+
 		return
 	}
 
-	c.JSON(consts.StatusOK, resp)
+	c.JSON(consts.StatusOK, &user.RegisterResp{
+		Message: "register success",
+		UserId:  resp.UserId,
+	})
 }
 
 // Login .
 // @router /auth/login [POST]
 func Login(ctx context.Context, c *app.RequestContext) {
+	hlog.CtxInfof(ctx, "User Login")
+
 	var err error
 	var req user.LoginReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
+		hlog.CtxErrorf(ctx, "Login error: %v", err)
+		c.JSON(consts.StatusInternalServerError, &user.LoginResp{
+			Message: err.Error(),
+		})
+
+		return
+	}
+
+	userclient := client.UserClient
+	_, err = userclient.Login(ctx, &userrpc.LoginReq{
+		Email:    req.Email,
+		Password: req.Password,
+	})
+
+	if err != nil {
+		hlog.CtxErrorf(ctx, "Login error: %v", err)
 		c.JSON(consts.StatusInternalServerError, &user.LoginResp{
 			Message: err.Error(),
 		})

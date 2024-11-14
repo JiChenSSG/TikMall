@@ -93,7 +93,7 @@ ReadFieldError:
 }
 
 func (x *RegisterResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
-	x.UserId, offset, err = fastpb.ReadInt32(buf, _type)
+	x.UserId, offset, err = fastpb.ReadInt64(buf, _type)
 	return offset, err
 }
 
@@ -163,7 +163,7 @@ ReadFieldError:
 }
 
 func (x *LoginResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
-	x.UserId, offset, err = fastpb.ReadInt32(buf, _type)
+	x.UserId, offset, err = fastpb.ReadInt64(buf, _type)
 	return offset, err
 }
 
@@ -193,7 +193,7 @@ ReadFieldError:
 }
 
 func (x *InfoReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
-	x.UserId, offset, err = fastpb.ReadInt32(buf, _type)
+	x.UserId, offset, err = fastpb.ReadInt64(buf, _type)
 	return offset, err
 }
 
@@ -228,7 +228,7 @@ ReadFieldError:
 }
 
 func (x *InfoResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
-	x.UserId, offset, err = fastpb.ReadInt32(buf, _type)
+	x.UserId, offset, err = fastpb.ReadInt64(buf, _type)
 	return offset, err
 }
 
@@ -263,7 +263,7 @@ ReadFieldError:
 }
 
 func (x *DeleteReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
-	x.UserId, offset, err = fastpb.ReadInt32(buf, _type)
+	x.UserId, offset, err = fastpb.ReadInt64(buf, _type)
 	return offset, err
 }
 
@@ -328,7 +328,7 @@ ReadFieldError:
 }
 
 func (x *UpdateReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
-	x.UserId, offset, err = fastpb.ReadInt32(buf, _type)
+	x.UserId, offset, err = fastpb.ReadInt64(buf, _type)
 	return offset, err
 }
 
@@ -408,7 +408,7 @@ ReadFieldError:
 }
 
 func (x *User) fastReadField1(buf []byte, _type int8) (offset int, err error) {
-	x.Id, offset, err = fastpb.ReadInt32(buf, _type)
+	x.Id, offset, err = fastpb.ReadInt64(buf, _type)
 	return offset, err
 }
 
@@ -483,7 +483,7 @@ func (x *RegisterResp) fastWriteField1(buf []byte) (offset int) {
 	if x.UserId == 0 {
 		return offset
 	}
-	offset += fastpb.WriteInt32(buf[offset:], 1, x.GetUserId())
+	offset += fastpb.WriteInt64(buf[offset:], 1, x.GetUserId())
 	return offset
 }
 
@@ -533,7 +533,7 @@ func (x *LoginResp) fastWriteField1(buf []byte) (offset int) {
 	if x.UserId == 0 {
 		return offset
 	}
-	offset += fastpb.WriteInt32(buf[offset:], 1, x.GetUserId())
+	offset += fastpb.WriteInt64(buf[offset:], 1, x.GetUserId())
 	return offset
 }
 
@@ -557,7 +557,7 @@ func (x *InfoReq) fastWriteField1(buf []byte) (offset int) {
 	if x.UserId == 0 {
 		return offset
 	}
-	offset += fastpb.WriteInt32(buf[offset:], 1, x.GetUserId())
+	offset += fastpb.WriteInt64(buf[offset:], 1, x.GetUserId())
 	return offset
 }
 
@@ -575,7 +575,7 @@ func (x *InfoResp) fastWriteField1(buf []byte) (offset int) {
 	if x.UserId == 0 {
 		return offset
 	}
-	offset += fastpb.WriteInt32(buf[offset:], 1, x.GetUserId())
+	offset += fastpb.WriteInt64(buf[offset:], 1, x.GetUserId())
 	return offset
 }
 
@@ -607,7 +607,7 @@ func (x *DeleteReq) fastWriteField1(buf []byte) (offset int) {
 	if x.UserId == 0 {
 		return offset
 	}
-	offset += fastpb.WriteInt32(buf[offset:], 1, x.GetUserId())
+	offset += fastpb.WriteInt64(buf[offset:], 1, x.GetUserId())
 	return offset
 }
 
@@ -642,7 +642,7 @@ func (x *UpdateReq) fastWriteField1(buf []byte) (offset int) {
 	if x.UserId == 0 {
 		return offset
 	}
-	offset += fastpb.WriteInt32(buf[offset:], 1, x.GetUserId())
+	offset += fastpb.WriteInt64(buf[offset:], 1, x.GetUserId())
 	return offset
 }
 
@@ -701,7 +701,7 @@ func (x *User) fastWriteField1(buf []byte) (offset int) {
 	if x.Id == 0 {
 		return offset
 	}
-	offset += fastpb.WriteInt32(buf[offset:], 1, x.GetId())
+	offset += fastpb.WriteInt64(buf[offset:], 1, x.GetId())
 	return offset
 }
 
@@ -785,7 +785,7 @@ func (x *RegisterResp) sizeField1() (n int) {
 	if x.UserId == 0 {
 		return n
 	}
-	n += fastpb.SizeInt32(1, x.GetUserId())
+	n += fastpb.SizeInt64(1, x.GetUserId())
 	return n
 }
 
@@ -835,7 +835,7 @@ func (x *LoginResp) sizeField1() (n int) {
 	if x.UserId == 0 {
 		return n
 	}
-	n += fastpb.SizeInt32(1, x.GetUserId())
+	n += fastpb.SizeInt64(1, x.GetUserId())
 	return n
 }
 
@@ -859,7 +859,7 @@ func (x *InfoReq) sizeField1() (n int) {
 	if x.UserId == 0 {
 		return n
 	}
-	n += fastpb.SizeInt32(1, x.GetUserId())
+	n += fastpb.SizeInt64(1, x.GetUserId())
 	return n
 }
 
@@ -877,7 +877,7 @@ func (x *InfoResp) sizeField1() (n int) {
 	if x.UserId == 0 {
 		return n
 	}
-	n += fastpb.SizeInt32(1, x.GetUserId())
+	n += fastpb.SizeInt64(1, x.GetUserId())
 	return n
 }
 
@@ -909,7 +909,7 @@ func (x *DeleteReq) sizeField1() (n int) {
 	if x.UserId == 0 {
 		return n
 	}
-	n += fastpb.SizeInt32(1, x.GetUserId())
+	n += fastpb.SizeInt64(1, x.GetUserId())
 	return n
 }
 
@@ -944,7 +944,7 @@ func (x *UpdateReq) sizeField1() (n int) {
 	if x.UserId == 0 {
 		return n
 	}
-	n += fastpb.SizeInt32(1, x.GetUserId())
+	n += fastpb.SizeInt64(1, x.GetUserId())
 	return n
 }
 
@@ -1003,7 +1003,7 @@ func (x *User) sizeField1() (n int) {
 	if x.Id == 0 {
 		return n
 	}
-	n += fastpb.SizeInt32(1, x.GetId())
+	n += fastpb.SizeInt64(1, x.GetId())
 	return n
 }
 
