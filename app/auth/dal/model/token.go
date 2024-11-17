@@ -15,7 +15,7 @@ func CacheToken(rdb *redis.Client, ctx context.Context, token string, userID int
 	return rdb.Set(ctx, utils.TokenKey(userID), token, time.Duration(ttl)*time.Second).Err()
 }
 
-func ExtendToken(rdb redis.Client, ctx context.Context, userID int64) error {
+func ExtendToken(rdb *redis.Client, ctx context.Context, userID int64) error {
 	script := `
 		if redis.call("EXISTS", KEYS[1]) == 1 then
 			return redis.call("EXPIRE", KEYS[1], ARGV[1])

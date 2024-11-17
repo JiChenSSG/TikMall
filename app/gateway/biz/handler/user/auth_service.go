@@ -26,7 +26,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 	var req user.RegisterReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		hlog.Errorf("Register error: %v", err)
+		hlog.CtxErrorf(ctx, "Register error: %v", err)
 		c.JSON(consts.StatusBadRequest, &user.RegisterResp{
 			Message: err.Error(),
 		})
@@ -56,7 +56,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 // Login .
 // @router /auth/login [POST]
 func Login(ctx context.Context, c *app.RequestContext) {
-	hlog.CtxInfof(ctx, "User Login")
+	hlog.Infof("User Login")
 
 	var err error
 	var req user.LoginReq
@@ -149,6 +149,8 @@ func Delete(ctx context.Context, c *app.RequestContext) {
 // RefreshToken .
 // @router /auth/refresh [POST]
 func RefreshToken(ctx context.Context, c *app.RequestContext) {
+	hlog.Infof("User RefreshToken")
+
 	var err error
 	var req user.RefreshTokenReq
 	err = c.BindAndValidate(&req)
@@ -157,7 +159,19 @@ func RefreshToken(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(user.RefreshTokenResp)
+	authclient := client.AuthClient
+	resp, err := authclient.RefreshToken(ctx, &authrpc.RefreshTokenReq{
+		RefreshToken: req.RefreshToken,
+	})
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	c.JSON(consts.StatusOK, &user.RefreshTokenResp{
+		Message:      "refresh token success",
+		RefreshToken: resp.RefreshToken,
+		AccessToken:  resp.AccessToken,
+	})
 }

@@ -24,21 +24,21 @@ func (s *AuthServiceImpl) DeliverToken(ctx context.Context, req *auth.DeliverTok
 
 	access, err := utils.GenToken(userID, time.Duration(config.GetConf().Token.AccessExpire)*time.Second)
 	if err != nil {
-		klog.Errorf("Generate access token failed: %v", err)
+		klog.CtxErrorf(ctx, "Generate access token failed: %v", err)
 		err = kerrors.NewBizStatusError(500, "Generate access token failed")
 		return
 	}
 
 	refresh, err := utils.GenToken(userID, 0)
 	if err != nil {
-		klog.Errorf("Generate refresh token failed: %v", err)
+		klog.CtxErrorf(ctx, "Generate refresh token failed: %v", err)
 		err = kerrors.NewBizStatusError(500, "Generate refresh token failed")
 		return
 	}
 
 	err = model.CacheToken(redis.GetClient(), ctx, refresh, userID)
 	if err != nil {
-		klog.Errorf("Cache refresh token failed: %v", err)
+		klog.CtxErrorf(ctx, "Cache refresh token failed: %v", err)
 		err = kerrors.NewBizStatusError(500, "Cache refresh token failed")
 		return
 	}
@@ -53,12 +53,66 @@ func (s *AuthServiceImpl) DeliverToken(ctx context.Context, req *auth.DeliverTok
 
 // RefreshToken implements the AuthServiceImpl interface.
 func (s *AuthServiceImpl) RefreshToken(ctx context.Context, req *auth.RefreshTokenReq) (resp *auth.RefreshResp, err error) {
-	// TODO: Your code here...
-	return
+	refreshToken := req.RefreshToken
+
+	userID, err := utils.ParseToken(refreshToken)
+	if err != nil {
+		klog.CtxErrorf(ctx, "Parse refresh token failed: %v", err)
+		err = kerrors.NewBizStatusError(500, "Parse refresh token failed")
+		return
+	}
+
+	accessToken, err := utils.GenToken(userID, time.Duration(config.GetConf().Token.AccessExpire)*time.Second)
+	if err != nil {
+		klog.CtxErrorf(ctx, "Generate access token failed: %v", err)
+		err = kerrors.NewBizStatusError(500, "Generate access token failed")
+		return
+	}
+
+	err = model.ExtendToken(redis.GetClient(), ctx, userID)
+	if err != nil {
+		klog.CtxErrorf(ctx, "Extend refresh token failed: %v", err)
+		err = kerrors.NewBizStatusError(500, "Extend refresh token failed")
+		return
+	}
+
+	return &auth.RefreshResp{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, nil
 }
 
 // VerifyToken implements the AuthServiceImpl interface.
 func (s *AuthServiceImpl) VerifyToken(ctx context.Context, req *auth.VerifyTokenReq) (resp *auth.VerifyResp, err error) {
-	// TODO: Your code here...
-	return
+	accessToken := req.Token
+
+	userID, err := utils.ParseToken(accessToken)
+	if err != nil {
+		klog.CtxErrorf(ctx, "Parse access token failed: %v", err)
+		err = kerrors.NewBizStatusError(500, "Parse access token failed")
+		return
+	}
+
+	return &auth.VerifyResp{
+		UserId: userID,
+	}, nil
+}
+
+// DeleteToken implements the AuthServiceImpl interface.
+func (s *AuthServiceImpl) DeleteToken(ctx context.Context, req *auth.DeleteTokenReq) (resp *auth.DeleteTokenResp, err error) {
+	accessToken := req.Token
+
+	userID, err := utils.ParseToken(accessToken)
+	if err != nil {
+		klog.CtxErrorf(ctx, "Parse access token failed: %v", err)
+		err = kerrors.NewBizStatusError(500, "Parse access token failed")
+	}
+
+	err = model.DeleteToken(redis.GetClient(), ctx, userID)
+	if err != nil {
+		klog.CtxErrorf(ctx, "Delete token failed: %v", err)
+		err = kerrors.NewBizStatusError(500, "Delete token failed")
+	}
+
+	return &auth.DeleteTokenResp{}, nil
 }

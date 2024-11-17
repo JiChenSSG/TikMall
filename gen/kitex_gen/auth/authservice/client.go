@@ -14,6 +14,7 @@ type Client interface {
 	DeliverToken(ctx context.Context, Req *auth.DeliverTokenReq, callOptions ...callopt.Option) (r *auth.DeliveryResp, err error)
 	RefreshToken(ctx context.Context, Req *auth.RefreshTokenReq, callOptions ...callopt.Option) (r *auth.RefreshResp, err error)
 	VerifyToken(ctx context.Context, Req *auth.VerifyTokenReq, callOptions ...callopt.Option) (r *auth.VerifyResp, err error)
+	DeleteToken(ctx context.Context, Req *auth.DeleteTokenReq, callOptions ...callopt.Option) (r *auth.DeleteTokenResp, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -58,4 +59,9 @@ func (p *kAuthServiceClient) RefreshToken(ctx context.Context, Req *auth.Refresh
 func (p *kAuthServiceClient) VerifyToken(ctx context.Context, Req *auth.VerifyTokenReq, callOptions ...callopt.Option) (r *auth.VerifyResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.VerifyToken(ctx, Req)
+}
+
+func (p *kAuthServiceClient) DeleteToken(ctx context.Context, Req *auth.DeleteTokenReq, callOptions ...callopt.Option) (r *auth.DeleteTokenResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.DeleteToken(ctx, Req)
 }

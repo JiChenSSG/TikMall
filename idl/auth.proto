@@ -9,6 +9,8 @@ service AuthService {
 	rpc RefreshToken(RefreshTokenReq) returns (RefreshResp) {}
     
 	rpc VerifyToken(VerifyTokenReq) returns (VerifyResp) {}
+	rpc DeleteToken(DeleteTokenReq) returns (DeleteTokenResp) {}
+
 }
 
 message DeliverTokenReq {
@@ -36,5 +38,12 @@ message VerifyTokenReq {
 }
 
 message VerifyResp {
-    bool success = 1;
+    int64 user_id = 1;
+}
+
+message DeleteTokenReq {
+	string token = 1;
+}
+
+message DeleteTokenResp {
 }

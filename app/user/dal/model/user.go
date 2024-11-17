@@ -27,7 +27,7 @@ func CreateUser(db *gorm.DB, ctx context.Context, user *User) (*User, error) {
 	klog.Infof("Create user: %v", user)
 
 	if err := db.WithContext(ctx).Create(user).Error; err != nil {
-		klog.Errorf("Create user failed: %v", err)
+		klog.CtxErrorf(ctx, "Create user failed: %v", err)
 		return nil, err
 	}
 
@@ -39,7 +39,7 @@ func GetUserByID(db *gorm.DB, ctx context.Context, id int64) (*User, error) {
 
 	user := new(User)
 	if err := db.WithContext(ctx).First(user, id).Error; err != nil {
-		klog.Errorf("Get user failed: %v", err)
+		klog.CtxErrorf(ctx, "Get user failed: %v", err)
 		return nil, err
 	}
 
@@ -51,7 +51,7 @@ func GetUserByEmail(db *gorm.DB, ctx context.Context, email string) (*User, erro
 
 	user := new(User)
 	if err := db.WithContext(ctx).Where("email = ?", email).First(user).Error; err != nil {
-		klog.Errorf("Get user failed: %v", err)
+		klog.CtxErrorf(ctx, "Get user failed: %v", err)
 		return nil, err
 	}
 
@@ -62,7 +62,7 @@ func DeleteUser(db *gorm.DB, ctx context.Context, id int64) error {
 	klog.Infof("Delete user by id: %v", id)
 
 	if err := db.WithContext(ctx).Delete(&User{}, id).Error; err != nil {
-		klog.Errorf("Delete user failed: %v", err)
+		klog.CtxErrorf(ctx, "Delete user failed: %v", err)
 		return err
 	}
 
@@ -73,7 +73,7 @@ func UpdateUser(db *gorm.DB, ctx context.Context, user *User) (*User, error) {
 	klog.Infof("Update user: %v", user)
 
 	if err := db.WithContext(ctx).Updates(user).Error; err != nil {
-		klog.Errorf("Update user failed: %v", err)
+		klog.CtxErrorf(ctx, "Update user failed: %v", err)
 		return nil, err
 	}
 
