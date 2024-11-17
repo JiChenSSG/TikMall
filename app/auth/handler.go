@@ -121,7 +121,7 @@ func (s *AuthServiceImpl) VerifyToken(ctx context.Context, req *auth.VerifyToken
 	}
 
 	if !allowed {
-		klog.CtxErrorf(ctx, "Permission denied")
+		klog.CtxWarnf(ctx, "Permission denied")
 		err = kerrors.NewBizStatusError(403, "Permission denied")
 		return
 	}

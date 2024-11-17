@@ -29,9 +29,11 @@ func AuthMiddleware() app.HandlerFunc {
 		if err != nil {
 			c.JSON(utils.ParseRpcError(err))
 			c.Abort()
+		} else {
+			// put the user id into the context
+			c.Set("user_id", resp.UserId)
 		}
 
-		// put the user id into the context
-		c.Set("user_id", resp.UserId)
+		c.Next(ctx)
 	}
 }
