@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/jichenssg/tikmall/app/common/obs"
-	"github.com/jichenssg/tikmall/app/user/config"
 	"github.com/jichenssg/tikmall/app/user/dal/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -21,10 +20,9 @@ func GetDB() *gorm.DB {
 	return db
 }
 
-func Init() {
+func Init(dsn string, username string, password string, host string, port int, database string) {
 	var err error
-	conf := config.GetConf().Mysql
-	dsn := fmt.Sprintf(conf.Dsn, conf.User, conf.Password, conf.Host, conf.Port, conf.Database)
+	dsn = fmt.Sprintf(dsn, username, password, host, port, database)
 
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		PrepareStmt:            true,

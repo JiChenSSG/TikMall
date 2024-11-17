@@ -26,7 +26,8 @@ message LoginReq {
 
 message LoginResp {
   string message = 1;
-  string token = 2;
+  string access_token = 2;
+  string refresh_token = 3;
 }
 
 message LogoutReq {
@@ -57,6 +58,17 @@ message DeleteResp {
 	string message = 1;
 }
 
+message RefreshTokenReq {
+	string refresh_token = 1 [ (api.header) = "Authorization,required" ];
+}
+
+message RefreshTokenResp {
+	string message = 1;
+	string access_token = 2;
+	string refresh_token = 3;
+}
+
+
 service AuthService {
   rpc register(RegisterReq) returns (RegisterResp) {
     option (api.post) = "/auth/register";
@@ -76,5 +88,9 @@ service AuthService {
 
   rpc delete(DeleteReq) returns (DeleteResp) {
 	option (api.delete) = "/auth/delete";
+  }
+
+  rpc refreshToken(RefreshTokenReq) returns (RefreshTokenResp) {
+	option (api.post) = "/auth/refresh";
   }
 }

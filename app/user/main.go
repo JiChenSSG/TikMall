@@ -7,7 +7,7 @@ import (
 	"github.com/cloudwego/kitex/server"
 	"github.com/jichenssg/tikmall/app/common/obs"
 	"github.com/jichenssg/tikmall/app/user/config"
-	"github.com/jichenssg/tikmall/app/user/dal/mysql"
+	"github.com/jichenssg/tikmall/app/common/dal/mysql"
 	user "github.com/jichenssg/tikmall/gen/kitex_gen/user/userservice"
 	"github.com/kanhai-syd/hailog/logging"
 	"github.com/natefinch/lumberjack"
@@ -34,7 +34,14 @@ func main() {
 		MaxAge:     config.GetConf().Kitex.LogMaxAge,
 	}, config.LogLevel())
 
-	mysql.Init()
+	mysql.Init(
+		config.GetConf().Mysql.Dsn,
+		config.GetConf().Mysql.User,
+		config.GetConf().Mysql.Password,
+		config.GetConf().Mysql.Host,
+		config.GetConf().Mysql.Port,
+		config.GetConf().Mysql.Database,
+	)
 
 	klog.Infof("Starting service %v", config.GetConf().Server.Name)
 

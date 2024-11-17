@@ -9,6 +9,12 @@ services:
       - ./env/db.sql:/docker-entrypoint-initdb.d/db.sql
     networks:
       - tikmall
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - tikmall
   consul:
     image: hashicorp/consul:latest
     container_name: consul

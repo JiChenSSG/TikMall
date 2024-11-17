@@ -20,6 +20,8 @@ type Config struct {
 	Server    Server    `yaml:"server"`
 	Telemetry Telemetry `yaml:"telemetry"`
 	Metrics   Metrics   `yaml:"metrics"`
+	Redis     Redis     `yaml:"redis"`
+	Token     Token     `yaml:"token"`
 }
 
 type Kitex struct {
@@ -48,6 +50,18 @@ type Telemetry struct {
 
 type Metrics struct {
 	Port int `yaml:"port"`
+}
+
+type Redis struct {
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	DB       int    `yaml:"db"`
+	Password string `yaml:"password"`
+}
+
+type Token struct {
+	AccessExpire  int `yaml:"access_expire"`
+	RefreshExpire int `yaml:"refresh_expire"`
 }
 
 var (

@@ -8,11 +8,12 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	"github.com/cloudwego/kitex/pkg/kerrors"
 	common "github.com/jichenssg/tikmall/gateway/biz/model/frontend/common"
 	user "github.com/jichenssg/tikmall/gateway/biz/model/frontend/user"
 	"github.com/jichenssg/tikmall/gateway/client"
+	"github.com/jichenssg/tikmall/gateway/utils"
 
+	authrpc "github.com/jichenssg/tikmall/gen/kitex_gen/auth"
 	userrpc "github.com/jichenssg/tikmall/gen/kitex_gen/user"
 )
 
@@ -42,21 +43,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 	})
 
 	if err != nil {
-		bizErr, isBizErr := kerrors.FromBizStatusError(err)
-		if isBizErr {
-			hlog.Errorf("Register biz error: %v", bizErr)
-			c.JSON(int(bizErr.BizStatusCode()), &user.RegisterResp{
-				Message: bizErr.BizMessage(),
-			})
-
-			return
-		}
-
-		hlog.Errorf("Register rpc error: %v", err)
-		c.JSON(consts.StatusInternalServerError, &user.RegisterResp{
-			Message: err.Error(),
-		})
-
+		c.JSON(utils.ParseRpcError(err))
 		return
 	}
 
@@ -90,16 +77,24 @@ func Login(ctx context.Context, c *app.RequestContext) {
 	})
 
 	if err != nil {
-		hlog.CtxErrorf(ctx, "Login error: %v", err)
-		c.JSON(consts.StatusInternalServerError, &user.LoginResp{
-			Message: err.Error(),
-		})
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
 
+	authclient := client.AuthClient
+	deliverTokenResp, err := authclient.DeliverToken(ctx, &authrpc.DeliverTokenReq{
+		UserId: 1,
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
 		return
 	}
 
 	c.JSON(consts.StatusOK, &user.LoginResp{
-		Message: "login success",
+		Message:      "login success",
+		RefreshToken: deliverTokenResp.RefreshToken,
+		AccessToken:  deliverTokenResp.AccessToken,
 	})
 }
 
@@ -147,6 +142,22 @@ func Delete(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(user.DeleteResp)
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// RefreshToken .
+// @router /auth/refresh [POST]
+func RefreshToken(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.RefreshTokenReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(user.RefreshTokenResp)
 
 	c.JSON(consts.StatusOK, resp)
 }

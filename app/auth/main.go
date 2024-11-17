@@ -8,6 +8,7 @@ import (
 	"github.com/cloudwego/kitex/server"
 	"github.com/jichenssg/tikmall/app/auth/config"
 	"github.com/jichenssg/tikmall/app/common/obs"
+	"github.com/jichenssg/tikmall/app/common/dal/redis"
 	auth "github.com/jichenssg/tikmall/gen/kitex_gen/auth/authservice"
 	"github.com/natefinch/lumberjack"
 
@@ -32,6 +33,13 @@ func main() {
 		MaxBackups: config.GetConf().Kitex.LogMaxBackups,
 		MaxAge:     config.GetConf().Kitex.LogMaxAge,
 	}, config.LogLevel())
+
+	redis.Init(
+		config.GetConf().Redis.Host,
+		config.GetConf().Redis.Port,
+		config.GetConf().Redis.DB,
+		config.GetConf().Redis.Password,
+	)
 
 	klog.Infof("Starting service %v", config.GetConf().Server.Name)
 

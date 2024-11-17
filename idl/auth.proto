@@ -5,22 +5,36 @@ package auth;
 option go_package = "/auth";
 
 service AuthService {
-    rpc DeliverTokenByRPC(DeliverTokenReq) returns (DeliveryResp) {}
-    rpc VerifyTokenByRPC(VerifyTokenReq) returns (VerifyResp) {}
+    rpc DeliverToken(DeliverTokenReq) returns (DeliveryResp) {}
+	rpc RefreshToken(RefreshTokenReq) returns (RefreshResp) {}
+    
+	rpc VerifyToken(VerifyTokenReq) returns (VerifyResp) {}
 }
 
 message DeliverTokenReq {
     int64 user_id = 1;
 }
 
-message VerifyTokenReq {
-    string token = 1;
+message DeliveryResp {
+    string access_token = 1;
+	string refresh_token = 2;
 }
 
-message DeliveryResp {
-    string token = 1;
+message RefreshTokenReq {
+	string refresh_token = 1;
+}
+
+message RefreshResp {
+	string access_token = 1;
+	string refresh_token = 2;
+}
+
+message VerifyTokenReq {
+	string token = 1;
+	string method = 2;
+	string path = 3;
 }
 
 message VerifyResp {
-    bool res = 1;
+    bool success = 1;
 }

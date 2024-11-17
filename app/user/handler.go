@@ -6,9 +6,8 @@ import (
 	"github.com/cloudwego/kitex/pkg/kerrors"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/jichenssg/tikmall/app/user/dal/model"
-	"github.com/jichenssg/tikmall/app/user/dal/mysql"
+	"github.com/jichenssg/tikmall/app/common/dal/mysql"
 	"github.com/jichenssg/tikmall/app/user/utils"
-	"github.com/jichenssg/tikmall/gen/kitex_gen/user"
 	userrpc "github.com/jichenssg/tikmall/gen/kitex_gen/user"
 )
 
@@ -46,7 +45,7 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *userrpc.RegisterReq
 }
 
 // Login implements the UserServiceImpl interface.
-func (s *UserServiceImpl) Login(ctx context.Context, req *user.LoginReq) (resp *userrpc.LoginResp, err error) {
+func (s *UserServiceImpl) Login(ctx context.Context, req *userrpc.LoginReq) (resp *userrpc.LoginResp, err error) {
 	klog.Info("User Login")
 
 	user, err := model.GetUserByEmail(mysql.GetDB(), ctx, req.Email)
@@ -65,11 +64,11 @@ func (s *UserServiceImpl) Login(ctx context.Context, req *user.LoginReq) (resp *
 		Success: true,
 	}
 
-	return
+	return resp, nil
 }
 
 // Info implements the UserServiceImpl interface.
-func (s *UserServiceImpl) Info(ctx context.Context, req *user.InfoReq) (resp *userrpc.InfoResp, err error) {
+func (s *UserServiceImpl) Info(ctx context.Context, req *userrpc.InfoReq) (resp *userrpc.InfoResp, err error) {
 	klog.Info("User Info")
 
 	user, err := model.GetUserByID(mysql.GetDB(), ctx, req.UserId)
@@ -84,11 +83,11 @@ func (s *UserServiceImpl) Info(ctx context.Context, req *user.InfoReq) (resp *us
 		Email:    user.Email,
 	}
 
-	return
+	return resp, nil
 }
 
 // Delete implements the UserServiceImpl interface.
-func (s *UserServiceImpl) Delete(ctx context.Context, req *user.DeleteReq) (resp *userrpc.DeleteResp, err error) {
+func (s *UserServiceImpl) Delete(ctx context.Context, req *userrpc.DeleteReq) (resp *userrpc.DeleteResp, err error) {
 	klog.Info("User Delete")
 
 	err = model.DeleteUser(mysql.GetDB(), ctx, req.UserId)
@@ -101,13 +100,11 @@ func (s *UserServiceImpl) Delete(ctx context.Context, req *user.DeleteReq) (resp
 		Success: true,
 	}
 
-
-
-	return
+	return resp, nil
 }
 
 // Update implements the UserServiceImpl interface.
-func (s *UserServiceImpl) Update(ctx context.Context, req *user.UpdateReq) (resp *userrpc.UpdateResp, err error) {
+func (s *UserServiceImpl) Update(ctx context.Context, req *userrpc.UpdateReq) (resp *userrpc.UpdateResp, err error) {
 	klog.Info("User Update")
 
 	user := &model.User{
