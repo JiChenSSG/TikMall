@@ -102,16 +102,26 @@ func Login(ctx context.Context, c *app.RequestContext) {
 // @router /auth/logout [POST]
 func Logout(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req common.Empty
+	var req user.LogoutReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
 
-	resp := new(common.Response)
+	authclient := client.AuthClient
+	_, err = authclient.DeleteToken(ctx, &authrpc.DeleteTokenReq{
+		Token: req.Token,
+	})
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	c.JSON(consts.StatusOK, &common.Response{
+		Message: "logout success",
+	})
 }
 
 // Info .
@@ -141,9 +151,7 @@ func Delete(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(user.DeleteResp)
 
-	c.JSON(consts.StatusOK, resp)
 }
 
 // RefreshToken .
