@@ -184,6 +184,16 @@ func (x *VerifyResp) FastRead(buf []byte, _type int8, number int32) (offset int,
 		if err != nil {
 			goto ReadFieldError
 		}
+	case 2:
+		offset, err = x.fastReadField2(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	case 3:
+		offset, err = x.fastReadField3(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
 	default:
 		offset, err = fastpb.Skip(buf, _type, number)
 		if err != nil {
@@ -199,6 +209,16 @@ ReadFieldError:
 
 func (x *VerifyResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
 	x.UserId, offset, err = fastpb.ReadInt64(buf, _type)
+	return offset, err
+}
+
+func (x *VerifyResp) fastReadField2(buf []byte, _type int8) (offset int, err error) {
+	x.Url, offset, err = fastpb.ReadString(buf, _type)
+	return offset, err
+}
+
+func (x *VerifyResp) fastReadField3(buf []byte, _type int8) (offset int, err error) {
+	x.Method, offset, err = fastpb.ReadString(buf, _type)
 	return offset, err
 }
 
@@ -361,6 +381,8 @@ func (x *VerifyResp) FastWrite(buf []byte) (offset int) {
 		return offset
 	}
 	offset += x.fastWriteField1(buf[offset:])
+	offset += x.fastWriteField2(buf[offset:])
+	offset += x.fastWriteField3(buf[offset:])
 	return offset
 }
 
@@ -369,6 +391,22 @@ func (x *VerifyResp) fastWriteField1(buf []byte) (offset int) {
 		return offset
 	}
 	offset += fastpb.WriteInt64(buf[offset:], 1, x.GetUserId())
+	return offset
+}
+
+func (x *VerifyResp) fastWriteField2(buf []byte) (offset int) {
+	if x.Url == "" {
+		return offset
+	}
+	offset += fastpb.WriteString(buf[offset:], 2, x.GetUrl())
+	return offset
+}
+
+func (x *VerifyResp) fastWriteField3(buf []byte) (offset int) {
+	if x.Method == "" {
+		return offset
+	}
+	offset += fastpb.WriteString(buf[offset:], 3, x.GetMethod())
 	return offset
 }
 
@@ -516,6 +554,8 @@ func (x *VerifyResp) Size() (n int) {
 		return n
 	}
 	n += x.sizeField1()
+	n += x.sizeField2()
+	n += x.sizeField3()
 	return n
 }
 
@@ -524,6 +564,22 @@ func (x *VerifyResp) sizeField1() (n int) {
 		return n
 	}
 	n += fastpb.SizeInt64(1, x.GetUserId())
+	return n
+}
+
+func (x *VerifyResp) sizeField2() (n int) {
+	if x.Url == "" {
+		return n
+	}
+	n += fastpb.SizeString(2, x.GetUrl())
+	return n
+}
+
+func (x *VerifyResp) sizeField3() (n int) {
+	if x.Method == "" {
+		return n
+	}
+	n += fastpb.SizeString(3, x.GetMethod())
 	return n
 }
 
@@ -576,6 +632,8 @@ var fieldIDToName_VerifyTokenReq = map[int32]string{
 
 var fieldIDToName_VerifyResp = map[int32]string{
 	1: "UserId",
+	2: "Url",
+	3: "Method",
 }
 
 var fieldIDToName_DeleteTokenReq = map[int32]string{

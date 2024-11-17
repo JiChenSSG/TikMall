@@ -39,6 +39,8 @@ message VerifyTokenReq {
 
 message VerifyResp {
     int64 user_id = 1;
+	string url = 2;
+	string method = 3;
 }
 
 message DeleteTokenReq {

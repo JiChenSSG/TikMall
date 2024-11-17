@@ -11,6 +11,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/jichenssg/tikmall/gateway/client"
 	"github.com/jichenssg/tikmall/gateway/config"
+	"github.com/jichenssg/tikmall/gateway/middlewares"
 	"github.com/jichenssg/tikmall/gateway/obs"
 
 	"github.com/hertz-contrib/cors"
@@ -49,6 +50,7 @@ func main() {
 	h.Use(hertzoteltracing.ServerMiddleware(cfg))
 	h.Use(recovery.Recovery())
 	h.Use(cors.Default())
+	h.Use(middlewares.AuthMiddleware())
 
 	register(h)
 

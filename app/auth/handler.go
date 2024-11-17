@@ -89,11 +89,40 @@ func (s *AuthServiceImpl) VerifyToken(ctx context.Context, req *auth.VerifyToken
 	klog.Infof("Verify token: %v", req.Token)
 
 	accessToken := req.Token
+	url := req.Path
+	method := req.Method
 
-	userID, err := utils.ParseToken(accessToken)
-	if err != nil {
-		klog.CtxErrorf(ctx, "Parse access token failed: %v", err)
-		err = kerrors.NewBizStatusError(500, "Parse access token failed")
+	var allowed bool
+	var userID int64
+
+	if accessToken == "" {
+		userID = 0
+		allowed, err = utils.EnforceAnonymous(url, method)
+		if err != nil {
+			klog.CtxErrorf(ctx, "Enforce failed: %v", err)
+			err = kerrors.NewBizStatusError(500, "Enforce failed")
+			return nil, err
+		}
+
+	} else {
+		userID, err = utils.ParseToken(accessToken)
+		if err != nil {
+			klog.CtxErrorf(ctx, "Parse access token failed: %v", err)
+			err = kerrors.NewBizStatusError(500, "Parse access token failed")
+			return
+		}
+
+		allowed, err = utils.Enforce(userID, url, method)
+		if err != nil {
+			klog.CtxErrorf(ctx, "Enforce failed: %v", err)
+			err = kerrors.NewBizStatusError(500, "Enforce failed")
+			return
+		}
+	}
+
+	if !allowed {
+		klog.CtxErrorf(ctx, "Permission denied")
+		err = kerrors.NewBizStatusError(403, "Permission denied")
 		return
 	}
 
@@ -105,7 +134,7 @@ func (s *AuthServiceImpl) VerifyToken(ctx context.Context, req *auth.VerifyToken
 // DeleteToken implements the AuthServiceImpl interface.
 func (s *AuthServiceImpl) DeleteToken(ctx context.Context, req *auth.DeleteTokenReq) (resp *auth.DeleteTokenResp, err error) {
 	klog.Infof("Delete token: %v", req.Token)
-	
+
 	accessToken := req.Token
 
 	userID, err := utils.ParseToken(accessToken)
