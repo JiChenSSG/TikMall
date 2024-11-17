@@ -30,6 +30,15 @@ func RemoveAdminRole(userID int64) error {
 	return removeRole(userID, "admin")
 }
 
+func GetRoles(userID int64) ([]string, error) {
+	roles, err := config.Enforcer.GetRolesForUser(fmt.Sprint(userID))
+	if err != nil {
+		return nil, err
+	}
+
+	return roles, nil
+}
+
 func RemoveAllRoles(userID int64) error {
 	// Remove all roles for the user
 	_, err := config.Enforcer.DeleteRolesForUser(fmt.Sprint(userID))

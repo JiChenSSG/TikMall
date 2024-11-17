@@ -11,6 +11,11 @@ service AuthService {
 	rpc VerifyToken(VerifyTokenReq) returns (VerifyResp) {}
 	rpc DeleteToken(DeleteTokenReq) returns (DeleteTokenResp) {}
 
+	rpc AddRole(AddRoleReq) returns (AddRoleResp) {}
+	rpc RemoveRole(RemoveRoleReq) returns (RemoveRoleResp) {}
+	rpc GetRoles(GetRolesReq) returns (GetRolesResp) {}
+	rpc RemoveAllRoles(GetRolesReq) returns (GetRolesResp) {}
+
 }
 
 message DeliverTokenReq {
@@ -48,4 +53,35 @@ message DeleteTokenReq {
 }
 
 message DeleteTokenResp {
+}
+
+message AddRoleReq {
+	string role = 1;
+	int64 user_id = 2;
+}
+
+message AddRoleResp {
+}
+
+message RemoveRoleReq {
+	string role = 1;
+	int64 user_id = 2;
+}
+
+message RemoveRoleResp {
+}
+
+message GetRolesReq {
+	int64 user_id = 1;
+}
+
+message GetRolesResp {
+	repeated string roles = 1;
+}
+
+message RemoveAllRolesReq {
+	int64 user_id = 1;
+}
+
+message RemoveAllRolesResp {
 }
