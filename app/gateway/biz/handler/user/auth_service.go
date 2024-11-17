@@ -6,37 +6,63 @@ import (
 	"context"
 
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	"github.com/cloudwego/kitex/pkg/klog"
 	common "github.com/jichenssg/tikmall/gateway/biz/model/frontend/common"
 	user "github.com/jichenssg/tikmall/gateway/biz/model/frontend/user"
 	"github.com/jichenssg/tikmall/gateway/client"
-	"github.com/jichenssg/tikmall/gen/kitex_gen/auth"
+	"github.com/jichenssg/tikmall/gateway/utils"
+
+	authrpc "github.com/jichenssg/tikmall/gen/kitex_gen/auth"
+	userrpc "github.com/jichenssg/tikmall/gen/kitex_gen/user"
 )
 
 // Register .
 // @router /auth/register [POST]
 func Register(ctx context.Context, c *app.RequestContext) {
+	hlog.Infof("User Register")
+
 	var err error
 	var req user.RegisterReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		hlog.CtxErrorf(ctx, "Register error: %v", err)
+		c.JSON(consts.StatusBadRequest, &user.RegisterResp{
+			Message: err.Error(),
+		})
+
 		return
 	}
 
-	resp := new(common.Response)
+	userclient := client.UserClient
+	resp, err := userclient.Register(ctx, &userrpc.RegisterReq{
+		Username:        req.Username,
+		Password:        req.Password,
+		ConfirmPassword: req.ConfirmPassword,
+		Email:           req.Email,
+	})
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	c.JSON(consts.StatusOK, &user.RegisterResp{
+		Message: "register success",
+		UserId:  resp.UserId,
+	})
 }
 
 // Login .
 // @router /auth/login [POST]
 func Login(ctx context.Context, c *app.RequestContext) {
+	hlog.Infof("User Login")
+
 	var err error
 	var req user.LoginReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
+		hlog.CtxErrorf(ctx, "Login error: %v", err)
 		c.JSON(consts.StatusInternalServerError, &user.LoginResp{
 			Message: err.Error(),
 		})
@@ -44,40 +70,31 @@ func Login(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	authc, err := client.GetAuthClient()
-	if err != nil {
-		klog.CtxErrorf(ctx, "fail to get auth client", err)
-		c.JSON(consts.StatusInternalServerError, &user.LoginResp{
-			Message: err.Error(),
-		})
-
-		return
-	}
-
-	resp, err := authc.VerifyTokenByRPC(ctx, &auth.VerifyTokenReq{
-		Token: "123",
+	userclient := client.UserClient
+	_, err = userclient.Login(ctx, &userrpc.LoginReq{
+		Email:    req.Email,
+		Password: req.Password,
 	})
 
 	if err != nil {
-		klog.CtxErrorf(ctx, "fail to verify token by rpc", err)
-		c.JSON(consts.StatusInternalServerError, &user.LoginResp{
-			Message: err.Error(),
-		})
-
+		c.JSON(utils.ParseRpcError(err))
 		return
 	}
 
-	if !resp.Res {
-		c.JSON(consts.StatusUnauthorized, &user.LoginResp{
-			Message: "login failed",
-		})
+	authclient := client.AuthClient
+	deliverTokenResp, err := authclient.DeliverToken(ctx, &authrpc.DeliverTokenReq{
+		UserId: 1,
+	})
 
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
 		return
 	}
 
 	c.JSON(consts.StatusOK, &user.LoginResp{
-		Message: "login success",
-
+		Message:      "login success",
+		RefreshToken: deliverTokenResp.RefreshToken,
+		AccessToken:  deliverTokenResp.AccessToken,
 	})
 }
 
@@ -95,4 +112,66 @@ func Logout(ctx context.Context, c *app.RequestContext) {
 	resp := new(common.Response)
 
 	c.JSON(consts.StatusOK, resp)
+}
+
+// Info .
+// @router /auth/info [GET]
+func Info(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.InfoReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(user.InfoResp)
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// Delete .
+// @router /auth/delete [DELETE]
+func Delete(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.DeleteReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(user.DeleteResp)
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// RefreshToken .
+// @router /auth/refresh [POST]
+func RefreshToken(ctx context.Context, c *app.RequestContext) {
+	hlog.Infof("User RefreshToken")
+
+	var err error
+	var req user.RefreshTokenReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	authclient := client.AuthClient
+	resp, err := authclient.RefreshToken(ctx, &authrpc.RefreshTokenReq{
+		RefreshToken: req.RefreshToken,
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	c.JSON(consts.StatusOK, &user.RefreshTokenResp{
+		Message:      "refresh token success",
+		RefreshToken: resp.RefreshToken,
+		AccessToken:  resp.AccessToken,
+	})
 }

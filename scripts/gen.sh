@@ -15,7 +15,7 @@ if [ "$isFrontend" = 0 ]; then
 
 	mkdir -p app/${svc}
 	cd app/${svc}
-	kitex -I ./../../idl -module "github.com/jichenssg/tikmall/app/auth" -service ${svc} -use "github.com/jichenssg/tikmall/gen/kitex_gen" ./../../idl/${svc}.proto
+	kitex -I ./../../idl -module "github.com/jichenssg/tikmall/app/${svc}" -service ${svc} -use "github.com/jichenssg/tikmall/gen/kitex_gen" ./../../idl/${svc}.proto
 else
 	cd app/gateway
 	# check if frontend folder exists

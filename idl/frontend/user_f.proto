@@ -8,9 +8,10 @@ import "frontend/common.proto";
 option go_package = "/frontend/user";
 
 message RegisterReq {
-  string email = 1 [ (api.form) = "email" ];
-  string password = 2 [ (api.form) = "password" ];
-  string confirm_password = 3 [ (api.form) = "confirm_password" ];
+  string email = 1 [ (api.body) = "email,required" ];
+  string password = 2 [ (api.body) = "password,required" ];
+  string confirm_password = 3 [ (api.body) = "confirm_password,required" ];
+  string username = 4 [ (api.body) = "username,required" ];
 }
 
 message RegisterResp {
@@ -19,13 +20,52 @@ message RegisterResp {
 }
 
 message LoginReq {
-  string email = 1 [ (api.form) = "email" ];
-  string password = 2 [ (api.form) = "password" ];
+  string email = 1 [ (api.body) = "email,required" ];
+  string password = 2 [ (api.body) = "password,required" ];
 }
 
 message LoginResp {
   string message = 1;
-  int64 user_id = 2;
+  string access_token = 2;
+  string refresh_token = 3;
+}
+
+message LogoutReq {
+	string token = 1 [ (api.header) = "Authorization,required" ];
+	string user_id = 2 [ (api.body) = "user_id,required" ];
+}
+
+message LogoutResp {
+	string message = 1;
+}
+
+message InfoReq {
+	string token = 1 [ (api.header) = "Authorization,required" ];
+}
+
+message InfoResp {
+	string message = 1;
+	int64 user_id = 2;
+	string email = 3;
+	string username = 4;
+}
+
+message DeleteReq {
+	string token = 1 [ (api.header) = "Authorization,required" ];
+}
+
+message DeleteResp {
+	string message = 1;
+}
+
+message RefreshTokenReq {
+	string refresh_token = 1 [ (api.header) = "Authorization,required" ];
+}
+
+message RefreshTokenResp {
+	string message = 1;
+	string access_token = 2;
+	string refresh_token = 3;
 }
 
 
@@ -40,5 +80,17 @@ service AuthService {
 
   rpc logout(common.Empty) returns (common.Response) {
     option (api.post) = "/auth/logout";
+  }
+
+  rpc info(InfoReq) returns (InfoResp) {
+	option (api.get) = "/auth/info";
+  }
+
+  rpc delete(DeleteReq) returns (DeleteResp) {
+	option (api.delete) = "/auth/delete";
+  }
+
+  rpc refreshToken(RefreshTokenReq) returns (RefreshTokenResp) {
+	option (api.post) = "/auth/refresh";
   }
 }

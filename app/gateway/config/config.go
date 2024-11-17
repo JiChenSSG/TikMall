@@ -20,6 +20,7 @@ type Config struct {
 	Server    Server    `yaml:"server"`
 	Endpoint  Endpoint  `yaml:"endpoint"`
 	Telemetry Telemetry `yaml:"telemetry"`
+	Metrics   Metrics   `yaml:"metrics"`
 }
 
 type Kitex struct {
@@ -38,6 +39,7 @@ type Consul struct {
 type Server struct {
 	Port int    `yaml:"port"`
 	Name string `yaml:"name"`
+	Host string `yaml:"host"`
 }
 
 type Endpoint struct {
@@ -47,6 +49,10 @@ type Endpoint struct {
 type Telemetry struct {
 	Host string `yaml:"host"`
 	Port int    `yaml:"port"`
+}
+
+type Metrics struct {
+	Port int `yaml:"port"`
 }
 
 var (

@@ -19,9 +19,12 @@ import (
 func InitLog(ioWriter io.Writer, logLevel klog.Level) {
 	var opts []kitexzap.Option
 	var output zapcore.WriteSyncer
-	if os.Getenv("GO_ENV") != "online" {
+	if os.Getenv("GO_ENV") != "prod" {
 		opts = append(opts, kitexzap.WithCoreEnc(zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())))
-		output = zapcore.AddSync(ioWriter)
+		output = zapcore.NewMultiWriteSyncer(
+			zapcore.AddSync(ioWriter),
+			zapcore.AddSync(os.Stdout),
+		)
 	} else {
 		opts = append(opts, kitexzap.WithCoreEnc(zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())))
 		// async log
@@ -30,11 +33,19 @@ func InitLog(ioWriter io.Writer, logLevel klog.Level) {
 			FlushInterval: time.Minute,
 		}
 	}
+
+	// opts = append(opts,
+	// 	otelzap.WithRecordStackTraceInSpan(true),
+	// 	otelzap.WithTraceErrorSpanLevel(zapcore.WarnLevel),
+	// )
+
 	server.RegisterShutdownHook(func() {
 		output.Sync() //nolint:errcheck
 		log.Println("log sync done")
 	})
+
 	log := kitexzap.NewLogger(opts...)
+
 	klog.SetLogger(log)
 	klog.SetLevel(logLevel)
 	klog.SetOutput(output)

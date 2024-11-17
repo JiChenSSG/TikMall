@@ -14,3 +14,13 @@ kitex:
 telemetry:
   host: 127.0.0.1
   port: 4317
+metrics:
+  port: 10000
+redis:
+  host: 127.0.0.1
+  port: 6379
+  db: 0
+  password: ""
+token:
+  access_expire: 3600 # 1 hour, access token expire time
+  refresh_expire: 2592000 # 30 days, refresh token expire time
