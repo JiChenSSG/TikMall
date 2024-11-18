@@ -7,7 +7,7 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	common "github.com/jichenssg/tikmall/gateway/biz/model/frontend/common"
+	common "github.com/jichenssg/tikmall/app/gateway/biz/model/frontend/common"
 )
 
 // OrderList .

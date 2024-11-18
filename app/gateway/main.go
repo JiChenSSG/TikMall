@@ -9,9 +9,10 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
 	"github.com/cloudwego/hertz/pkg/app/server"
-	"github.com/jichenssg/tikmall/gateway/client"
-	"github.com/jichenssg/tikmall/gateway/config"
-	"github.com/jichenssg/tikmall/gateway/obs"
+	"github.com/jichenssg/tikmall/app/gateway/config"
+	"github.com/jichenssg/tikmall/app/gateway/middlewares"
+	"github.com/jichenssg/tikmall/app/gateway/obs"
+	"github.com/jichenssg/tikmall/app/common/client"
 
 	"github.com/hertz-contrib/cors"
 	hertzprom "github.com/hertz-contrib/monitor-prometheus"
@@ -22,7 +23,11 @@ import (
 
 func main() {
 	obs.Init()
-	client.Init()
+	client.Init(
+		config.GetConf().Server.Name,
+		fmt.Sprintf("%v:%v", config.GetConf().Consul.Host, config.GetConf().Consul.Port),
+		fmt.Sprintf("%v:%v", config.GetConf().Telemetry.Host, config.GetConf().Telemetry.Port),
+	)
 
 	p := hertzotelprovider.NewOpenTelemetryProvider(
 		hertzotelprovider.WithSdkTracerProvider(obs.TracerProvider),
@@ -49,6 +54,7 @@ func main() {
 	h.Use(hertzoteltracing.ServerMiddleware(cfg))
 	h.Use(recovery.Recovery())
 	h.Use(cors.Default())
+	h.Use(middlewares.AuthMiddleware())
 
 	register(h)
 

@@ -4,7 +4,7 @@ package main
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
-	handler "github.com/jichenssg/tikmall/gateway/biz/handler"
+	handler "github.com/jichenssg/tikmall/app/gateway/biz/handler"
 )
 
 // customizeRegister registers customize routers.

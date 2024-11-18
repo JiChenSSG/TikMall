@@ -59,6 +59,19 @@ message RefreshTokenResp {
 	string refresh_token = 3;
 }
 
+message RoleReq {
+	int64 user_id = 1 [ (api.body) = "user_id,required" ];
+}
+
+message GetRolesReq {
+	int64 user_id = 1 [ (api.query) = "user_id,required" ];
+}
+
+message GetRolesResp {
+	string message = 1;
+	repeated string roles = 2;
+}
+
 
 service AuthService {
   rpc register(RegisterReq) returns (RegisterResp) {
@@ -78,10 +91,35 @@ service AuthService {
   }
 
   rpc delete(DeleteReq) returns (common.Response) {
-	option (api.delete) = "/auth/delete";
+	option (api.post) = "/auth/delete";
   }
 
   rpc refreshToken(RefreshTokenReq) returns (RefreshTokenResp) {
 	option (api.post) = "/auth/refresh";
+  }
+
+  // dynamic role management
+  rpc AddUserRole(RoleReq) returns (common.Response) {
+	option (api.post) = "/auth/role/add_user";
+  }
+
+  rpc RemoveUserRole(RoleReq) returns (common.Response) {
+	option (api.post) = "/auth/role/remove_user";
+  }
+
+  rpc AddAdminRole(RoleReq) returns (common.Response) {
+	option (api.post) = "/auth/role/add_admin";
+  }
+
+  rpc RemoveAdminRole(RoleReq) returns (common.Response) {
+	option (api.post) = "/auth/role/remove_admin";
+  }
+
+  rpc AddBlacklistRole(RoleReq) returns (common.Response) {
+	option (api.post) = "/auth/role/add_blacklist";
+  }
+
+  rpc GetRoles(GetRolesReq) returns (GetRolesResp) {
+	option (api.get) = "/auth/roles";
   }
 }

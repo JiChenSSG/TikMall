@@ -1,12 +1,10 @@
 package client
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/cloudwego/kitex/client"
 	"github.com/jichenssg/tikmall/app/common/clientsuite"
-	"github.com/jichenssg/tikmall/gateway/config"
 	"github.com/jichenssg/tikmall/gen/kitex_gen/auth/authservice"
 	"github.com/jichenssg/tikmall/gen/kitex_gen/user/userservice"
 )
@@ -17,18 +15,16 @@ var (
 	Once       sync.Once
 )
 
-func Init() {
-	Once.Do(func() {
-		commonClientSuite := client.WithSuite(clientsuite.CommonClientSuite{
-			ServiceName:      config.GetConf().Server.Name,
-			RegistryEndpoint: fmt.Sprintf("%s:%d", config.GetConf().Consul.Host, config.GetConf().Consul.Port),
-			OtelEndpoint:     fmt.Sprintf("%s:%d", config.GetConf().Telemetry.Host, config.GetConf().Telemetry.Port),
-		})
-
-		initAuthClient(commonClientSuite)
-		initUserClient(commonClientSuite)
-
+func Init(serviceName, registryEndpoint, otelEndpoint string) {
+	commonClientSuite := client.WithSuite(clientsuite.CommonClientSuite{
+		ServiceName:      serviceName,
+		RegistryEndpoint: registryEndpoint,
+		OtelEndpoint:     otelEndpoint,
 	})
+
+	initAuthClient(commonClientSuite)
+	initUserClient(commonClientSuite)
+
 }
 
 func initAuthClient(suite client.Option) {

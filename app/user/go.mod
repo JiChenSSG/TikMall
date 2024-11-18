@@ -14,17 +14,29 @@ require (
 	github.com/cloudwego/kitex v0.11.3
 	github.com/go-chassis/foundation v0.4.0
 	github.com/jichenssg/tikmall/app/common v0.0.0-00010101000000-000000000000
-	github.com/jichenssg/tikmall/gen v0.0.0-00010101000000-000000000000
+	github.com/jichenssg/tikmall/gen v0.0.0-20241117044501-64630d912002
 	github.com/joho/godotenv v1.5.1
 	github.com/kanhai-syd/hailog v0.0.0-20241111050534-02944a3c918f
-	github.com/kitex-contrib/obs-opentelemetry v0.2.8
-	github.com/kitex-contrib/registry-consul v0.0.0-20240508100819-2905e45155c1
 	github.com/kr/pretty v0.3.1
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	gopkg.in/yaml.v2 v2.4.0
-	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.25.12
 	gorm.io/plugin/soft_delete v1.2.1
+)
+
+require (
+	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/kitex-contrib/monitor-prometheus v0.2.0 // indirect
+	github.com/kitex-contrib/obs-opentelemetry v0.2.8 // indirect
+	github.com/kitex-contrib/obs-opentelemetry/logging/zap v0.0.0-20241108060226-a2d88c8d88e9 // indirect
+	github.com/kitex-contrib/registry-consul v0.0.0-20240508100819-2905e45155c1 // indirect
+	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
+	github.com/prometheus/client_golang v1.14.0 // indirect
+	github.com/prometheus/client_model v0.3.0 // indirect
+	github.com/prometheus/common v0.37.0 // indirect
+	github.com/prometheus/procfs v0.8.0 // indirect
+	gorm.io/driver/mysql v1.5.7 // indirect
 )
 
 require (
@@ -70,8 +82,6 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/kanhai-syd/hailog/logging/zap v0.0.0-20241111050534-02944a3c918f // indirect
-	github.com/kanhai-syd/hailog/otellog v0.0.0-20241111052947-c9dbe3734186 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
@@ -99,7 +109,7 @@ require (
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.25.0 // indirect
 	go.opentelemetry.io/otel/metric v1.32.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.32.0 // indirect
-	go.opentelemetry.io/otel/sdk/metric v1.25.0 // indirect
+	go.opentelemetry.io/otel/sdk/metric v1.32.0 // indirect
 	go.opentelemetry.io/otel/trace v1.32.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.1.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
@@ -116,5 +126,5 @@ require (
 	google.golang.org/protobuf v1.35.1 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	gorm.io/plugin/opentelemetry v0.1.8
+	gorm.io/plugin/opentelemetry v0.1.8 // indirect
 )

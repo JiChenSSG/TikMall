@@ -4,7 +4,7 @@ package order
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
-	order "github.com/jichenssg/tikmall/gateway/biz/handler/order"
+	order "github.com/jichenssg/tikmall/app/gateway/biz/handler/order"
 )
 
 /*

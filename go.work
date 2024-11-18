@@ -1,9 +1,0 @@
-go 1.22.2
-
-use (
-	./app/auth
-	./app/common
-	./app/gateway
-	./app/user
-	./gen
-)

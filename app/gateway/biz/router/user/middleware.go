@@ -45,3 +45,38 @@ func _refreshtokenMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _getrolesMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _roleMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _adduserroleMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _addadminroleMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _addblacklistroleMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _removeuserroleMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _removeadminroleMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

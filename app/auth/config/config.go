@@ -7,11 +7,14 @@ import (
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/go-chassis/foundation/validator"
+	"github.com/casbin/casbin/v2"
 	"github.com/kr/pretty"
 	"gopkg.in/yaml.v2"
 
 	"github.com/joho/godotenv"
 )
+
+var Enforcer *casbin.Enforcer
 
 type Config struct {
 	Env       string
@@ -95,6 +98,14 @@ func initConf() {
 	}
 	conf.Env = GetEnv()
 	pretty.Printf("%+v\n", conf)
+
+	casbinModelPath := filepath.Join(prefix, "model.conf")
+	casbinPolicyPath := filepath.Join(prefix, filepath.Join(GetEnv(), "policy.csv"))
+	Enforcer, err = casbin.NewEnforcer(casbinModelPath, casbinPolicyPath)
+	if err != nil {
+		klog.Error("load casbin error - %v", err)
+		panic(err)
+	}
 }
 
 func GetEnv() string {

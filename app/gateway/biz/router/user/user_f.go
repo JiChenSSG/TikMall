@@ -4,7 +4,7 @@ package user
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
-	user "github.com/jichenssg/tikmall/gateway/biz/handler/user"
+	user "github.com/jichenssg/tikmall/app/gateway/biz/handler/user"
 )
 
 /*
@@ -19,11 +19,20 @@ func Register(r *server.Hertz) {
 	root := r.Group("/", rootMw()...)
 	{
 		_auth := root.Group("/auth", _authMw()...)
-		_auth.DELETE("/delete", append(_deleteMw(), user.Delete)...)
+		_auth.POST("/delete", append(_deleteMw(), user.Delete)...)
 		_auth.GET("/info", append(_infoMw(), user.Info)...)
 		_auth.POST("/login", append(_loginMw(), user.Login)...)
 		_auth.POST("/logout", append(_logoutMw(), user.Logout)...)
 		_auth.POST("/refresh", append(_refreshtokenMw(), user.RefreshToken)...)
 		_auth.POST("/register", append(_registerMw(), user.Register)...)
+		_auth.GET("/roles", append(_getrolesMw(), user.GetRoles)...)
+		{
+			_role := _auth.Group("/role", _roleMw()...)
+			_role.POST("/add_admin", append(_addadminroleMw(), user.AddAdminRole)...)
+			_role.POST("/add_blacklist", append(_addblacklistroleMw(), user.AddBlacklistRole)...)
+			_role.POST("/add_user", append(_adduserroleMw(), user.AddUserRole)...)
+			_role.POST("/remove_admin", append(_removeadminroleMw(), user.RemoveAdminRole)...)
+			_role.POST("/remove_user", append(_removeuserroleMw(), user.RemoveUserRole)...)
+		}
 	}
 }
