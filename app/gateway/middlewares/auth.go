@@ -5,8 +5,8 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/jichenssg/tikmall/gateway/client"
-	"github.com/jichenssg/tikmall/gateway/utils"
+	"github.com/jichenssg/tikmall/app/common/client"
+	"github.com/jichenssg/tikmall/app/gateway/utils"
 	"github.com/jichenssg/tikmall/gen/kitex_gen/auth"
 )
 

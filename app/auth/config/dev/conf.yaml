@@ -22,5 +22,5 @@ redis:
   db: 0
   password: ""
 token:
-  access_expire: 3600 # 1 hour, access token expire time
-  refresh_expire: 2592000 # 30 days, refresh token expire time
+  access_expire: 25920000 # access token expire time
+  refresh_expire: 2592000 # refresh token expire time

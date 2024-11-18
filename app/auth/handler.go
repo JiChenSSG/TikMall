@@ -217,7 +217,7 @@ func (s *AuthServiceImpl) GetRoles(ctx context.Context, req *auth.GetRolesReq) (
 }
 
 // RemoveAllRoles implements the AuthServiceImpl interface.
-func (s *AuthServiceImpl) RemoveAllRoles(ctx context.Context, req *auth.GetRolesReq) (resp *auth.GetRolesResp, err error) {
+func (s *AuthServiceImpl) RemoveAllRoles(ctx context.Context, req *auth.RemoveAllRolesReq) (resp *auth.RemoveAllRolesResp, err error) {
 	klog.Infof("Remove all roles: %v", req.UserId)
 
 	userID := req.UserId
@@ -229,5 +229,5 @@ func (s *AuthServiceImpl) RemoveAllRoles(ctx context.Context, req *auth.GetRoles
 		return
 	}
 
-	return &auth.GetRolesResp{}, nil
+	return &auth.RemoveAllRolesResp{}, nil
 }

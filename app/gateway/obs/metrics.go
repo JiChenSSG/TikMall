@@ -11,7 +11,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/route"
 	consulapi "github.com/hashicorp/consul/api"
 	"github.com/hertz-contrib/registry/consul"
-	"github.com/jichenssg/tikmall/gateway/config"
+	"github.com/jichenssg/tikmall/app/gateway/config"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"

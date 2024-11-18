@@ -7,8 +7,8 @@ import (
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/server"
 	"github.com/jichenssg/tikmall/app/auth/config"
-	"github.com/jichenssg/tikmall/app/common/obs"
 	"github.com/jichenssg/tikmall/app/common/dal/redis"
+	"github.com/jichenssg/tikmall/app/common/obs"
 	auth "github.com/jichenssg/tikmall/gen/kitex_gen/auth/authservice"
 	"github.com/natefinch/lumberjack"
 

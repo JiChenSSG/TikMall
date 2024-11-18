@@ -5,9 +5,10 @@ import (
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/server"
+	"github.com/jichenssg/tikmall/app/common/client"
+	"github.com/jichenssg/tikmall/app/common/dal/mysql"
 	"github.com/jichenssg/tikmall/app/common/obs"
 	"github.com/jichenssg/tikmall/app/user/config"
-	"github.com/jichenssg/tikmall/app/common/dal/mysql"
 	user "github.com/jichenssg/tikmall/gen/kitex_gen/user/userservice"
 	"github.com/kanhai-syd/hailog/logging"
 	"github.com/natefinch/lumberjack"
@@ -41,6 +42,12 @@ func main() {
 		config.GetConf().Mysql.Host,
 		config.GetConf().Mysql.Port,
 		config.GetConf().Mysql.Database,
+	)
+
+	client.Init(
+		config.GetConf().Server.Name,
+		fmt.Sprintf("%v:%v", config.GetConf().Consul.Host, config.GetConf().Consul.Port),
+		fmt.Sprintf("%v:%v", config.GetConf().Telemetry.Host, config.GetConf().Telemetry.Port),
 	)
 
 	klog.Infof("Starting service %v", config.GetConf().Server.Name)

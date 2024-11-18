@@ -1,11 +1,10 @@
 package obs
 
-
 import (
 	"context"
 
 	"github.com/cloudwego/hertz/pkg/route"
-	"github.com/jichenssg/tikmall/gateway/config"
+	"github.com/jichenssg/tikmall/app/gateway/config"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/sdk/resource"
@@ -29,7 +28,7 @@ func initTracer() route.CtxCallback {
 	if err != nil {
 		res = resource.Default()
 	}
-	
+
 	TracerProvider = tracesdk.NewTracerProvider(
 		tracesdk.WithSpanProcessor(processor),
 		tracesdk.WithResource(res),

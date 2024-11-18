@@ -1,8 +1,7 @@
-
-p, admin, /**, *
-
-p, user, /auth/**, *
-
+p, admin, /.*, *
+p, user, ^/auth/role$, DENY
+p, user, ^/auth/.*, *
 p, anonymous, /auth/login, POST
 p, anonymous, /auth/register, POST
-
+g, 6, admin
+g, 11, user

@@ -7,8 +7,8 @@
 package order
 
 import (
-	_ "github.com/jichenssg/tikmall/gateway/biz/model/api"
-	common "github.com/jichenssg/tikmall/gateway/biz/model/frontend/common"
+	_ "github.com/jichenssg/tikmall/app/gateway/biz/model/api"
+	common "github.com/jichenssg/tikmall/app/gateway/biz/model/frontend/common"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

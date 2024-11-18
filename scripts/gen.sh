@@ -20,7 +20,7 @@ else
 	cd app/gateway
 	# check if frontend folder exists
 	if [ ! -f ".hz" ]; then
-		hz new -I ./../../idl -module "github.com/jichenssg/tikmall/gateway" -idl ./../../idl/frontend/${svc}_f.proto
+		hz new -I ./../../idl -module "github.com/jichenssg/tikmall/app/gateway" -idl ./../../idl/frontend/${svc}_f.proto
 	fi
 		hz update -I ./../../idl -idl ./../../idl/frontend/${svc}_f.proto
 

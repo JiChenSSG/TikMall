@@ -18,7 +18,7 @@ type Client interface {
 	AddRole(ctx context.Context, Req *auth.AddRoleReq, callOptions ...callopt.Option) (r *auth.AddRoleResp, err error)
 	RemoveRole(ctx context.Context, Req *auth.RemoveRoleReq, callOptions ...callopt.Option) (r *auth.RemoveRoleResp, err error)
 	GetRoles(ctx context.Context, Req *auth.GetRolesReq, callOptions ...callopt.Option) (r *auth.GetRolesResp, err error)
-	RemoveAllRoles(ctx context.Context, Req *auth.GetRolesReq, callOptions ...callopt.Option) (r *auth.GetRolesResp, err error)
+	RemoveAllRoles(ctx context.Context, Req *auth.RemoveAllRolesReq, callOptions ...callopt.Option) (r *auth.RemoveAllRolesResp, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -85,7 +85,7 @@ func (p *kAuthServiceClient) GetRoles(ctx context.Context, Req *auth.GetRolesReq
 	return p.kClient.GetRoles(ctx, Req)
 }
 
-func (p *kAuthServiceClient) RemoveAllRoles(ctx context.Context, Req *auth.GetRolesReq, callOptions ...callopt.Option) (r *auth.GetRolesResp, err error) {
+func (p *kAuthServiceClient) RemoveAllRoles(ctx context.Context, Req *auth.RemoveAllRolesReq, callOptions ...callopt.Option) (r *auth.RemoveAllRolesResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.RemoveAllRoles(ctx, Req)
 }

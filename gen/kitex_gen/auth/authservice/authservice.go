@@ -1212,7 +1212,7 @@ func removeAllRolesHandler(ctx context.Context, handler interface{}, arg, result
 	switch s := arg.(type) {
 	case *streaming.Args:
 		st := s.Stream
-		req := new(auth.GetRolesReq)
+		req := new(auth.RemoveAllRolesReq)
 		if err := st.RecvMsg(req); err != nil {
 			return err
 		}
@@ -1242,12 +1242,12 @@ func newRemoveAllRolesResult() interface{} {
 }
 
 type RemoveAllRolesArgs struct {
-	Req *auth.GetRolesReq
+	Req *auth.RemoveAllRolesReq
 }
 
 func (p *RemoveAllRolesArgs) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
 	if !p.IsSetReq() {
-		p.Req = new(auth.GetRolesReq)
+		p.Req = new(auth.RemoveAllRolesReq)
 	}
 	return p.Req.FastRead(buf, _type, number)
 }
@@ -1274,7 +1274,7 @@ func (p *RemoveAllRolesArgs) Marshal(out []byte) ([]byte, error) {
 }
 
 func (p *RemoveAllRolesArgs) Unmarshal(in []byte) error {
-	msg := new(auth.GetRolesReq)
+	msg := new(auth.RemoveAllRolesReq)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -1282,9 +1282,9 @@ func (p *RemoveAllRolesArgs) Unmarshal(in []byte) error {
 	return nil
 }
 
-var RemoveAllRolesArgs_Req_DEFAULT *auth.GetRolesReq
+var RemoveAllRolesArgs_Req_DEFAULT *auth.RemoveAllRolesReq
 
-func (p *RemoveAllRolesArgs) GetReq() *auth.GetRolesReq {
+func (p *RemoveAllRolesArgs) GetReq() *auth.RemoveAllRolesReq {
 	if !p.IsSetReq() {
 		return RemoveAllRolesArgs_Req_DEFAULT
 	}
@@ -1300,14 +1300,14 @@ func (p *RemoveAllRolesArgs) GetFirstArgument() interface{} {
 }
 
 type RemoveAllRolesResult struct {
-	Success *auth.GetRolesResp
+	Success *auth.RemoveAllRolesResp
 }
 
-var RemoveAllRolesResult_Success_DEFAULT *auth.GetRolesResp
+var RemoveAllRolesResult_Success_DEFAULT *auth.RemoveAllRolesResp
 
 func (p *RemoveAllRolesResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
 	if !p.IsSetSuccess() {
-		p.Success = new(auth.GetRolesResp)
+		p.Success = new(auth.RemoveAllRolesResp)
 	}
 	return p.Success.FastRead(buf, _type, number)
 }
@@ -1334,7 +1334,7 @@ func (p *RemoveAllRolesResult) Marshal(out []byte) ([]byte, error) {
 }
 
 func (p *RemoveAllRolesResult) Unmarshal(in []byte) error {
-	msg := new(auth.GetRolesResp)
+	msg := new(auth.RemoveAllRolesResp)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -1342,7 +1342,7 @@ func (p *RemoveAllRolesResult) Unmarshal(in []byte) error {
 	return nil
 }
 
-func (p *RemoveAllRolesResult) GetSuccess() *auth.GetRolesResp {
+func (p *RemoveAllRolesResult) GetSuccess() *auth.RemoveAllRolesResp {
 	if !p.IsSetSuccess() {
 		return RemoveAllRolesResult_Success_DEFAULT
 	}
@@ -1350,7 +1350,7 @@ func (p *RemoveAllRolesResult) GetSuccess() *auth.GetRolesResp {
 }
 
 func (p *RemoveAllRolesResult) SetSuccess(x interface{}) {
-	p.Success = x.(*auth.GetRolesResp)
+	p.Success = x.(*auth.RemoveAllRolesResp)
 }
 
 func (p *RemoveAllRolesResult) IsSetSuccess() bool {
@@ -1441,7 +1441,7 @@ func (p *kClient) GetRoles(ctx context.Context, Req *auth.GetRolesReq) (r *auth.
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) RemoveAllRoles(ctx context.Context, Req *auth.GetRolesReq) (r *auth.GetRolesResp, err error) {
+func (p *kClient) RemoveAllRoles(ctx context.Context, Req *auth.RemoveAllRolesReq) (r *auth.RemoveAllRolesResp, err error) {
 	var _args RemoveAllRolesArgs
 	_args.Req = Req
 	var _result RemoveAllRolesResult

@@ -13,18 +13,17 @@ replace github.com/golang/protobuf => github.com/golang/protobuf v1.5.4
 replace go.opentelemetry.io/otel/sdk/metric => go.opentelemetry.io/otel/sdk/metric v1.32.0
 
 require (
+	github.com/casbin/casbin/v2 v2.37.0
 	github.com/cloudwego/kitex v0.11.3
 	github.com/jichenssg/tikmall/app/common v0.0.0-00010101000000-000000000000
-	github.com/jichenssg/tikmall/gen v0.0.0-00010101000000-000000000000
-	github.com/kitex-contrib/obs-opentelemetry v0.2.8
-	github.com/kitex-contrib/registry-consul v0.0.0-20240508100819-2905e45155c1
+	github.com/jichenssg/tikmall/gen v0.0.0-20241117044501-64630d912002
 	github.com/kr/pretty v0.3.1
-	gopkg.in/yaml.v2 v2.3.0
+	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
 	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
-	github.com/casbin/casbin/v2 v2.37.0 // indirect
+	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
@@ -36,10 +35,20 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.0 // indirect
 	github.com/kanhai-syd/hailog v0.0.0-20241111050534-02944a3c918f // indirect
-	github.com/kanhai-syd/hailog/logging/zap v0.0.0-20241111050534-02944a3c918f // indirect
-	github.com/kanhai-syd/hailog/otellog v0.0.0-20241111052947-c9dbe3734186 // indirect
+	github.com/kitex-contrib/monitor-prometheus v0.2.0 // indirect
+	github.com/kitex-contrib/obs-opentelemetry v0.2.8 // indirect
+	github.com/kitex-contrib/obs-opentelemetry/logging/zap v0.0.0-20241108060226-a2d88c8d88e9 // indirect
+	github.com/kitex-contrib/registry-consul v0.0.0-20240508100819-2905e45155c1 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
+	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
+	github.com/miekg/dns v1.1.43 // indirect
+	github.com/prometheus/client_golang v1.14.0 // indirect
+	github.com/prometheus/client_model v0.3.0 // indirect
+	github.com/prometheus/common v0.37.0 // indirect
+	github.com/prometheus/procfs v0.8.0 // indirect
+	github.com/redis/go-redis/extra/rediscmd/v9 v9.7.0 // indirect
+	github.com/redis/go-redis/extra/redisotel/v9 v9.7.0 // indirect
 	github.com/rogpeppe/go-internal v1.10.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/runtime v0.45.0 // indirect
 	go.opentelemetry.io/contrib/propagators/b3 v1.20.0 // indirect
@@ -51,7 +60,7 @@ require (
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.25.0 // indirect
 	go.opentelemetry.io/otel/metric v1.32.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.32.0 // indirect
-	go.opentelemetry.io/otel/sdk/metric v1.25.0 // indirect
+	go.opentelemetry.io/otel/sdk/metric v1.32.0 // indirect
 	go.opentelemetry.io/otel/trace v1.32.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.1.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
@@ -84,7 +93,6 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
 	github.com/go-chassis/foundation v0.4.0
-	github.com/go-kit/kit v0.13.0
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/pprof v0.0.0-20240727154555-813a5fbdbec8 // indirect
 	github.com/hashicorp/consul/api v1.20.0 // indirect

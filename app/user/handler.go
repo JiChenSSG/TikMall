@@ -5,9 +5,11 @@ import (
 
 	"github.com/cloudwego/kitex/pkg/kerrors"
 	"github.com/cloudwego/kitex/pkg/klog"
-	"github.com/jichenssg/tikmall/app/user/dal/model"
+	"github.com/jichenssg/tikmall/app/common/client"
 	"github.com/jichenssg/tikmall/app/common/dal/mysql"
+	"github.com/jichenssg/tikmall/app/user/dal/model"
 	"github.com/jichenssg/tikmall/app/user/utils"
+	"github.com/jichenssg/tikmall/gen/kitex_gen/auth"
 	userrpc "github.com/jichenssg/tikmall/gen/kitex_gen/user"
 )
 
@@ -30,11 +32,27 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *userrpc.RegisterReq
 		Email:    req.Email,
 	}
 
-	user, err = model.CreateUser(mysql.GetDB(), ctx, user)
+	// use transaction to ensure use and role are created successfully
+	tx := mysql.GetDB().Begin()
+
+	err = tx.WithContext(ctx).Create(user).Error
 	if err != nil {
 		err = kerrors.NewBizStatusError(500, err.Error())
 		return nil, err
 	}
+
+	authclient := client.AuthClient
+	_, err = authclient.AddRole(ctx, &auth.AddRoleReq{
+		UserId: user.ID,
+		Role:   "user",
+	})
+
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	tx.Commit()
 
 	resp = &userrpc.RegisterResp{
 		UserId:  user.ID,

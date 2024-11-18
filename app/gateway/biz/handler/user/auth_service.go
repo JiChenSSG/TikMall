@@ -8,10 +8,11 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	common "github.com/jichenssg/tikmall/gateway/biz/model/frontend/common"
-	user "github.com/jichenssg/tikmall/gateway/biz/model/frontend/user"
-	"github.com/jichenssg/tikmall/gateway/client"
-	"github.com/jichenssg/tikmall/gateway/utils"
+	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/jichenssg/tikmall/app/common/client"
+	common "github.com/jichenssg/tikmall/app/gateway/biz/model/frontend/common"
+	user "github.com/jichenssg/tikmall/app/gateway/biz/model/frontend/user"
+	"github.com/jichenssg/tikmall/app/gateway/utils"
 
 	authrpc "github.com/jichenssg/tikmall/gen/kitex_gen/auth"
 	userrpc "github.com/jichenssg/tikmall/gen/kitex_gen/user"
@@ -71,7 +72,7 @@ func Login(ctx context.Context, c *app.RequestContext) {
 	}
 
 	userclient := client.UserClient
-	_, err = userclient.Login(ctx, &userrpc.LoginReq{
+	loginResp, err := userclient.Login(ctx, &userrpc.LoginReq{
 		Email:    req.Email,
 		Password: req.Password,
 	})
@@ -83,7 +84,7 @@ func Login(ctx context.Context, c *app.RequestContext) {
 
 	authclient := client.AuthClient
 	deliverTokenResp, err := authclient.DeliverToken(ctx, &authrpc.DeliverTokenReq{
-		UserId: 1,
+		UserId: loginResp.UserId,
 	})
 
 	if err != nil {
@@ -135,9 +136,21 @@ func Info(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(user.InfoResp)
+	userclient := client.UserClient
+	resp, err := userclient.Info(ctx, &userrpc.InfoReq{
+		UserId: c.GetInt64("user_id"),
+	})
 
-	c.JSON(consts.StatusOK, resp)
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	c.JSON(consts.StatusOK, &user.InfoResp{
+		UserId:   resp.UserId,
+		Username: resp.Username,
+		Email:    resp.Email,
+	})
 }
 
 // Delete .
@@ -151,6 +164,29 @@ func Delete(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
+	authclient := client.AuthClient
+	_, err = authclient.DeleteToken(ctx, &authrpc.DeleteTokenReq{
+		Token: req.Token,
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	userclient := client.UserClient
+	_, err = userclient.Delete(ctx, &userrpc.DeleteReq{
+		UserId: c.GetInt64("user_id"),
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	c.JSON(consts.StatusOK, &common.Response{
+		Message: "delete success",
+	})
 
 }
 
@@ -181,5 +217,167 @@ func RefreshToken(ctx context.Context, c *app.RequestContext) {
 		Message:      "refresh token success",
 		RefreshToken: resp.RefreshToken,
 		AccessToken:  resp.AccessToken,
+	})
+}
+
+// AddUserRole .
+// @router /auth/role/add [POST]
+func AddUserRole(ctx context.Context, c *app.RequestContext) {
+	klog.Infof("AddUserRole")
+
+	var err error
+	var req user.RoleReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	authclient := client.AuthClient
+	_, err = authclient.AddRole(ctx, &authrpc.AddRoleReq{
+		UserId: req.UserId,
+		Role:   "user",
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	c.JSON(consts.StatusOK, &common.Response{
+		Message: "add role success",
+	})
+}
+
+// RemoveUserRole .
+// @router /auth/role/remove [POST]
+func RemoveUserRole(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.RoleReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	authclient := client.AuthClient
+	_, err = authclient.RemoveRole(ctx, &authrpc.RemoveRoleReq{
+		UserId: req.UserId,
+		Role:   "user",
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	c.JSON(consts.StatusOK, &common.Response{
+		Message: "remove role success",
+	})
+}
+
+// AddAdminRole .
+// @router /auth/role/add_admin [POST]
+func AddAdminRole(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.RoleReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	authclient := client.AuthClient
+	_, err = authclient.AddRole(ctx, &authrpc.AddRoleReq{
+		UserId: req.UserId,
+		Role:   "admin",
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	c.JSON(consts.StatusOK, &common.Response{
+		Message: "add role success",
+	})
+}
+
+// RemoveAdminRole .
+// @router /auth/role/remove_admin [POST]
+func RemoveAdminRole(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.RoleReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	authclient := client.AuthClient
+	_, err = authclient.RemoveRole(ctx, &authrpc.RemoveRoleReq{
+		UserId: req.UserId,
+		Role:   "admin",
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	c.JSON(consts.StatusOK, &common.Response{
+		Message: "remove role success",
+	})
+}
+
+// AddBlacklistRole .
+// @router /auth/role/add_blacklist [POST]
+func AddBlacklistRole(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.RoleReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	authclient := client.AuthClient
+	_, err = authclient.RemoveAllRoles(ctx, &authrpc.RemoveAllRolesReq{
+		UserId: req.UserId,
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	c.JSON(consts.StatusOK, &common.Response{
+		Message: "add blacklist success",
+	})
+}
+
+// GetRoles .
+// @router /auth/roles [GET]
+func GetRoles(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.GetRolesReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	authclient := client.AuthClient
+	resp, err := authclient.GetRoles(ctx, &authrpc.GetRolesReq{
+		UserId: req.UserId,
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	c.JSON(consts.StatusOK, &user.GetRolesResp{
+		Roles: resp.Roles,
 	})
 }

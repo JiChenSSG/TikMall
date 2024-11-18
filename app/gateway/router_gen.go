@@ -4,7 +4,7 @@ package main
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
-	router "github.com/jichenssg/tikmall/gateway/biz/router"
+	router "github.com/jichenssg/tikmall/app/gateway/biz/router"
 )
 
 // register registers all routers.

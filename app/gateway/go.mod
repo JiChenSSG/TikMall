@@ -1,4 +1,4 @@
-module github.com/jichenssg/tikmall/gateway
+module github.com/jichenssg/tikmall/app/gateway
 
 go 1.22.2
 
@@ -18,7 +18,7 @@ require (
 	github.com/hertz-contrib/obs-opentelemetry/provider v0.3.0
 	github.com/hertz-contrib/obs-opentelemetry/tracing v0.4.1
 	github.com/jichenssg/tikmall/app/common v0.0.0-00010101000000-000000000000
-	github.com/jichenssg/tikmall/gen v0.0.0-00010101000000-000000000000
+	github.com/jichenssg/tikmall/gen v0.0.0-20241117044501-64630d912002
 	github.com/joho/godotenv v1.5.1
 	github.com/kr/pretty v0.3.1
 	github.com/natefinch/lumberjack v2.0.0+incompatible
@@ -44,7 +44,7 @@ require (
 	go.opentelemetry.io/contrib/propagators/ot v1.25.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric v0.42.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc v0.42.0 // indirect
-	go.opentelemetry.io/otel/sdk/metric v1.25.0 // indirect
+	go.opentelemetry.io/otel/sdk/metric v1.32.0 // indirect
 )
 
 require (

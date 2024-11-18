@@ -3,7 +3,7 @@ package utils
 import (
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/cloudwego/kitex/pkg/kerrors"
-	"github.com/jichenssg/tikmall/gateway/biz/model/frontend/common"
+	"github.com/jichenssg/tikmall/app/gateway/biz/model/frontend/common"
 )
 
 func ParseRpcError(err error) (code int, response *common.Response) {

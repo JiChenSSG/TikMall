@@ -14,7 +14,7 @@ service AuthService {
 	rpc AddRole(AddRoleReq) returns (AddRoleResp) {}
 	rpc RemoveRole(RemoveRoleReq) returns (RemoveRoleResp) {}
 	rpc GetRoles(GetRolesReq) returns (GetRolesResp) {}
-	rpc RemoveAllRoles(GetRolesReq) returns (GetRolesResp) {}
+	rpc RemoveAllRoles(RemoveAllRolesReq) returns (RemoveAllRolesResp) {}
 
 }
 
