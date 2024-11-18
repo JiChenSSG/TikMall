@@ -48,12 +48,12 @@ func (x *ListProductsReq) fastReadField1(buf []byte, _type int8) (offset int, er
 }
 
 func (x *ListProductsReq) fastReadField2(buf []byte, _type int8) (offset int, err error) {
-	x.PageSize, offset, err = fastpb.ReadInt64(buf, _type)
+	x.PageSize, offset, err = fastpb.ReadInt32(buf, _type)
 	return offset, err
 }
 
 func (x *ListProductsReq) fastReadField3(buf []byte, _type int8) (offset int, err error) {
-	x.CategoryName, offset, err = fastpb.ReadString(buf, _type)
+	x.CategoryId, offset, err = fastpb.ReadInt64(buf, _type)
 	return offset, err
 }
 
@@ -103,7 +103,7 @@ ReadFieldError:
 }
 
 func (x *Product) fastReadField1(buf []byte, _type int8) (offset int, err error) {
-	x.Id, offset, err = fastpb.ReadUint32(buf, _type)
+	x.Id, offset, err = fastpb.ReadInt64(buf, _type)
 	return offset, err
 }
 
@@ -188,7 +188,7 @@ ReadFieldError:
 }
 
 func (x *GetProductReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
-	x.Id, offset, err = fastpb.ReadUint32(buf, _type)
+	x.Id, offset, err = fastpb.ReadInt64(buf, _type)
 	return offset, err
 }
 
@@ -747,15 +747,15 @@ func (x *ListProductsReq) fastWriteField2(buf []byte) (offset int) {
 	if x.PageSize == 0 {
 		return offset
 	}
-	offset += fastpb.WriteInt64(buf[offset:], 2, x.GetPageSize())
+	offset += fastpb.WriteInt32(buf[offset:], 2, x.GetPageSize())
 	return offset
 }
 
 func (x *ListProductsReq) fastWriteField3(buf []byte) (offset int) {
-	if x.CategoryName == "" {
+	if x.CategoryId == 0 {
 		return offset
 	}
-	offset += fastpb.WriteString(buf[offset:], 3, x.GetCategoryName())
+	offset += fastpb.WriteInt64(buf[offset:], 3, x.GetCategoryId())
 	return offset
 }
 
@@ -776,7 +776,7 @@ func (x *Product) fastWriteField1(buf []byte) (offset int) {
 	if x.Id == 0 {
 		return offset
 	}
-	offset += fastpb.WriteUint32(buf[offset:], 1, x.GetId())
+	offset += fastpb.WriteInt64(buf[offset:], 1, x.GetId())
 	return offset
 }
 
@@ -852,7 +852,7 @@ func (x *GetProductReq) fastWriteField1(buf []byte) (offset int) {
 	if x.Id == 0 {
 		return offset
 	}
-	offset += fastpb.WriteUint32(buf[offset:], 1, x.GetId())
+	offset += fastpb.WriteInt64(buf[offset:], 1, x.GetId())
 	return offset
 }
 
@@ -1234,15 +1234,15 @@ func (x *ListProductsReq) sizeField2() (n int) {
 	if x.PageSize == 0 {
 		return n
 	}
-	n += fastpb.SizeInt64(2, x.GetPageSize())
+	n += fastpb.SizeInt32(2, x.GetPageSize())
 	return n
 }
 
 func (x *ListProductsReq) sizeField3() (n int) {
-	if x.CategoryName == "" {
+	if x.CategoryId == 0 {
 		return n
 	}
-	n += fastpb.SizeString(3, x.GetCategoryName())
+	n += fastpb.SizeInt64(3, x.GetCategoryId())
 	return n
 }
 
@@ -1263,7 +1263,7 @@ func (x *Product) sizeField1() (n int) {
 	if x.Id == 0 {
 		return n
 	}
-	n += fastpb.SizeUint32(1, x.GetId())
+	n += fastpb.SizeInt64(1, x.GetId())
 	return n
 }
 
@@ -1339,7 +1339,7 @@ func (x *GetProductReq) sizeField1() (n int) {
 	if x.Id == 0 {
 		return n
 	}
-	n += fastpb.SizeUint32(1, x.GetId())
+	n += fastpb.SizeInt64(1, x.GetId())
 	return n
 }
 
@@ -1702,7 +1702,7 @@ func (x *UpdateCategoryResp) Size() (n int) {
 var fieldIDToName_ListProductsReq = map[int32]string{
 	1: "Page",
 	2: "PageSize",
-	3: "CategoryName",
+	3: "CategoryId",
 }
 
 var fieldIDToName_Product = map[int32]string{
