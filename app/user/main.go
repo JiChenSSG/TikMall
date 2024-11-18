@@ -9,6 +9,7 @@ import (
 	"github.com/jichenssg/tikmall/app/common/dal/mysql"
 	"github.com/jichenssg/tikmall/app/common/obs"
 	"github.com/jichenssg/tikmall/app/user/config"
+	"github.com/jichenssg/tikmall/app/user/dal/model"
 	user "github.com/jichenssg/tikmall/gen/kitex_gen/user/userservice"
 	"github.com/kanhai-syd/hailog/logging"
 	"github.com/natefinch/lumberjack"
@@ -43,6 +44,7 @@ func main() {
 		config.GetConf().Mysql.Port,
 		config.GetConf().Mysql.Database,
 	)
+	mysql.GetDB().AutoMigrate(&model.User{})
 
 	client.Init(
 		config.GetConf().Server.Name,

@@ -20,6 +20,7 @@ require (
 	github.com/kr/pretty v0.3.1
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	gopkg.in/yaml.v2 v2.4.0
+	gorm.io/gorm v1.25.12
 )
 
 require (
@@ -64,7 +65,6 @@ require (
 	github.com/hashicorp/serf v0.10.1 // indirect
 	github.com/iancoleman/strcase v0.2.0 // indirect
 	github.com/jhump/protoreflect v1.8.2 // indirect
-	github.com/jichenssg/tikmall/app/user v0.0.0-20241117044501-64630d912002 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -119,10 +119,9 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240401170217-c3f982113cda // indirect
 	google.golang.org/grpc v1.63.0 // indirect
 	google.golang.org/protobuf v1.35.1 // indirect
+	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/mysql v1.5.7 // indirect
-	gorm.io/gorm v1.25.12 // indirect
 	gorm.io/plugin/opentelemetry v0.1.8 // indirect
-	gorm.io/plugin/soft_delete v1.2.1 // indirect
 )

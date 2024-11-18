@@ -2,10 +2,8 @@ package mysql
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/jichenssg/tikmall/app/common/obs"
-	"github.com/jichenssg/tikmall/app/user/dal/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
@@ -31,10 +29,6 @@ func Init(dsn string, username string, password string, host string, port int, d
 
 	if err != nil {
 		panic(err)
-	}
-
-	if os.Getenv("GO_ENV") != "prod" {
-		db.AutoMigrate(&model.User{})
 	}
 
 	// use otel tracing

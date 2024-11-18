@@ -5,15 +5,16 @@ import (
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/server"
-	"github.com/jichenssg/tikmall/app/product/config"
-	"github.com/kanhai-syd/hailog/logging"
-	"github.com/natefinch/lumberjack"
 	"github.com/jichenssg/tikmall/app/common/client"
 	"github.com/jichenssg/tikmall/app/common/dal/mysql"
 	"github.com/jichenssg/tikmall/app/common/obs"
+	"github.com/jichenssg/tikmall/app/product/config"
+	"github.com/jichenssg/tikmall/app/product/dal/model"
+	"github.com/kanhai-syd/hailog/logging"
+	"github.com/natefinch/lumberjack"
 
-	product "github.com/jichenssg/tikmall/gen/kitex_gen/product/productcatalogservice"
 	serversuite "github.com/jichenssg/tikmall/app/common/serversuite"
+	product "github.com/jichenssg/tikmall/gen/kitex_gen/product/productcatalogservice"
 )
 
 func main() {
@@ -43,6 +44,7 @@ func main() {
 		config.GetConf().Mysql.Port,
 		config.GetConf().Mysql.Database,
 	)
+	mysql.GetDB().AutoMigrate(&model.Product{})
 
 	client.Init(
 		config.GetConf().Server.Name,

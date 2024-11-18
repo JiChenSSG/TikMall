@@ -12,6 +12,11 @@ service ProductCatalogService {
   rpc CreateProduct(CreateProductReq) returns (CreateProductResp) {}
   rpc UpdateProduct(UpdateProductReq) returns (UpdateProductResp) {}
   rpc DeleteProduct(DeleteProductReq) returns (DeleteProductResp) {}
+
+  rpc CreateCategory(CreateCategoryReq) returns (CreateCategoryResp) {}
+  rpc ListCategories(ListCategoriesReq) returns (ListCategoriesResp) {}
+  rpc DeleteCategory(DeleteCategoryReq) returns (DeleteCategoryResp) {}
+  rpc UpdateCategory(UpdateCategoryReq) returns (UpdateCategoryResp) {}
 }
 
 message ListProductsReq{
@@ -28,7 +33,7 @@ message Product {
   string picture = 4;
   float price = 5;
 
-  repeated string categories = 6;
+  repeated Category categories = 6;
 }
 
 message ListProductsResp {
@@ -57,7 +62,7 @@ message CreateProductReq {
   string picture = 3;
   float price = 4;
 
-  repeated string categories = 5;
+  repeated int64 categoryIds = 5;
 }
 
 message CreateProductResp {
@@ -71,11 +76,10 @@ message UpdateProductReq {
   string picture = 4;
   float price = 5;
 
-  repeated string categories = 6;
+  repeated int64 categoryIds = 6;
 }
 
 message UpdateProductResp {
-  int64 id = 1;
 }
 
 message DeleteProductReq {
@@ -83,5 +87,40 @@ message DeleteProductReq {
 }
 
 message DeleteProductResp {
+}
+
+message CreateCategoryReq {
+  string name = 1;
+}
+
+message CreateCategoryResp {
+  int64 id = 1;
+}
+
+message ListCategoriesReq {
+}
+
+message Category {
+  int64 id = 1;
+  string name = 2;
+}
+
+message ListCategoriesResp {
+  repeated Category categories = 1;
+}
+
+message DeleteCategoryReq {
+  int64 id = 1;
+}
+
+message DeleteCategoryResp {
+}
+
+message UpdateCategoryReq {
+  int64 id = 1;
+  string name = 2;
+}
+
+message UpdateCategoryResp {
 }
 

@@ -17,6 +17,10 @@ type Client interface {
 	CreateProduct(ctx context.Context, Req *product.CreateProductReq, callOptions ...callopt.Option) (r *product.CreateProductResp, err error)
 	UpdateProduct(ctx context.Context, Req *product.UpdateProductReq, callOptions ...callopt.Option) (r *product.UpdateProductResp, err error)
 	DeleteProduct(ctx context.Context, Req *product.DeleteProductReq, callOptions ...callopt.Option) (r *product.DeleteProductResp, err error)
+	CreateCategory(ctx context.Context, Req *product.CreateCategoryReq, callOptions ...callopt.Option) (r *product.CreateCategoryResp, err error)
+	ListCategories(ctx context.Context, Req *product.ListCategoriesReq, callOptions ...callopt.Option) (r *product.ListCategoriesResp, err error)
+	DeleteCategory(ctx context.Context, Req *product.DeleteCategoryReq, callOptions ...callopt.Option) (r *product.DeleteCategoryResp, err error)
+	UpdateCategory(ctx context.Context, Req *product.UpdateCategoryReq, callOptions ...callopt.Option) (r *product.UpdateCategoryResp, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -76,4 +80,24 @@ func (p *kProductCatalogServiceClient) UpdateProduct(ctx context.Context, Req *p
 func (p *kProductCatalogServiceClient) DeleteProduct(ctx context.Context, Req *product.DeleteProductReq, callOptions ...callopt.Option) (r *product.DeleteProductResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.DeleteProduct(ctx, Req)
+}
+
+func (p *kProductCatalogServiceClient) CreateCategory(ctx context.Context, Req *product.CreateCategoryReq, callOptions ...callopt.Option) (r *product.CreateCategoryResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.CreateCategory(ctx, Req)
+}
+
+func (p *kProductCatalogServiceClient) ListCategories(ctx context.Context, Req *product.ListCategoriesReq, callOptions ...callopt.Option) (r *product.ListCategoriesResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.ListCategories(ctx, Req)
+}
+
+func (p *kProductCatalogServiceClient) DeleteCategory(ctx context.Context, Req *product.DeleteCategoryReq, callOptions ...callopt.Option) (r *product.DeleteCategoryResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.DeleteCategory(ctx, Req)
+}
+
+func (p *kProductCatalogServiceClient) UpdateCategory(ctx context.Context, Req *product.UpdateCategoryReq, callOptions ...callopt.Option) (r *product.UpdateCategoryResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.UpdateCategory(ctx, Req)
 }
