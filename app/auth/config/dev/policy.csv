@@ -1,7 +1,15 @@
 p, admin, /.*, *
 p, user, ^/auth/role$, DENY
 p, user, ^/auth/.*, *
+p, user, /product/list, GET
+p, user, /product/get, GET
+p, user, /product/search, GET
+p, user, /cart/.*, *
 p, anonymous, /auth/login, POST
 p, anonymous, /auth/register, POST
+p, anonymous, /auth/refresh, POST
+p, anonymous, /product/list, GET
+p, anonymous, /product/get, GET
+p, anonymous, /product/search, GET
 g, 6, admin
 g, 11, user
