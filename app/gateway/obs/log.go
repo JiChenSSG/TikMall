@@ -16,10 +16,10 @@ import (
 
 func initLog() {
 	ioWriter := &lumberjack.Logger{
-		Filename:   config.GetConf().Kitex.LogFileName,
-		MaxSize:    config.GetConf().Kitex.LogMaxSize,
-		MaxBackups: config.GetConf().Kitex.LogMaxBackups,
-		MaxAge:     config.GetConf().Kitex.LogMaxAge,
+		Filename:   config.GetConf().Hertz.LogFileName,
+		MaxSize:    config.GetConf().Hertz.LogMaxSize,
+		MaxBackups: config.GetConf().Hertz.LogMaxBackups,
+		MaxAge:     config.GetConf().Hertz.LogMaxAge,
 	}
 
 	var opts []hertzzap.Option
@@ -44,6 +44,6 @@ func initLog() {
 
 	log := hertzotelzap.NewLogger(hertzotelzap.WithLogger(hertzzap.NewLogger(opts...)))
 	hlog.SetLogger(log)
-	hlog.SetLevel(hlog.LevelInfo)
+	hlog.SetLevel(config.LogLevel())
 	hlog.SetOutput(output)
 }

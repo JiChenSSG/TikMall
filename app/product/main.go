@@ -8,13 +8,13 @@ import (
 	"github.com/jichenssg/tikmall/app/common/client"
 	"github.com/jichenssg/tikmall/app/common/dal/mysql"
 	"github.com/jichenssg/tikmall/app/common/obs"
-	"github.com/jichenssg/tikmall/app/user/config"
-	"github.com/jichenssg/tikmall/app/user/dal/model"
-	user "github.com/jichenssg/tikmall/gen/kitex_gen/user/userservice"
+	"github.com/jichenssg/tikmall/app/product/config"
+	"github.com/jichenssg/tikmall/app/product/dal/model"
 	"github.com/kanhai-syd/hailog/logging"
 	"github.com/natefinch/lumberjack"
 
 	serversuite "github.com/jichenssg/tikmall/app/common/serversuite"
+	product "github.com/jichenssg/tikmall/gen/kitex_gen/product/productcatalogservice"
 )
 
 func main() {
@@ -44,7 +44,7 @@ func main() {
 		config.GetConf().Mysql.Port,
 		config.GetConf().Mysql.Database,
 	)
-	mysql.GetDB().AutoMigrate(&model.User{})
+	mysql.GetDB().AutoMigrate(&model.Product{})
 
 	client.Init(
 		config.GetConf().Server.Name,
@@ -58,8 +58,8 @@ func main() {
 }
 
 func kitexInit() {
-	svr := user.NewServer(
-		new(UserServiceImpl),
+	svr := product.NewServer(
+		new(ProductCatalogServiceImpl),
 		server.WithSuite(
 			serversuite.CommonServerSuite{
 				ServiceName:      config.GetConf().Server.Name,

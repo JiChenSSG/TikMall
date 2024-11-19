@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/go-chassis/foundation/validator"
 	"github.com/kr/pretty"
 	"gopkg.in/yaml.v2"
@@ -15,15 +15,15 @@ import (
 
 type Config struct {
 	Env       string
-	Hertz     Hertz     `yaml:"hertz"`
+	Kitex     Kitex     `yaml:"kitex"`
 	Consul    Consul    `yaml:"consul"`
 	Server    Server    `yaml:"server"`
-	Endpoint  Endpoint  `yaml:"endpoint"`
 	Telemetry Telemetry `yaml:"telemetry"`
+	Mysql     Mysql     `yaml:"mysql"`
 	Metrics   Metrics   `yaml:"metrics"`
 }
 
-type Hertz struct {
+type Kitex struct {
 	LogLevel      string `yaml:"log_level"`
 	LogFileName   string `yaml:"log_file_name"`
 	LogMaxSize    int    `yaml:"log_max_size"`
@@ -37,18 +37,23 @@ type Consul struct {
 }
 
 type Server struct {
+	Host string `yaml:"host"`
 	Port int    `yaml:"port"`
 	Name string `yaml:"name"`
-	Host string `yaml:"host"`
-}
-
-type Endpoint struct {
-	Auth string `yaml:"auth"`
 }
 
 type Telemetry struct {
 	Host string `yaml:"host"`
 	Port int    `yaml:"port"`
+}
+
+type Mysql struct {
+	Dsn      string `yaml:"dsn"`
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	User     string `yaml:"user"`
+	Password string `yaml:"password"`
+	Database string `yaml:"database"`
 }
 
 type Metrics struct {
@@ -77,11 +82,11 @@ func initConf() {
 	conf = new(Config)
 	err = yaml.Unmarshal(content, conf)
 	if err != nil {
-		hlog.Error("parse yaml error - %v", err)
+		klog.Error("parse yaml error - %v", err)
 		panic(err)
 	}
 	if err := validator.Validate(conf); err != nil {
-		hlog.Error("validate config error - %v", err)
+		klog.Error("validate config error - %v", err)
 		panic(err)
 	}
 	conf.Env = GetEnv()
@@ -93,7 +98,7 @@ func GetEnv() string {
 		func() {
 			err := godotenv.Load()
 			if err != nil {
-				hlog.Error("load env error - %v", err)
+				klog.Error("load env error - %v", err)
 				panic(err)
 			}
 		},
@@ -106,24 +111,24 @@ func GetEnv() string {
 	return e
 }
 
-func LogLevel() hlog.Level {
-	level := GetConf().Hertz.LogLevel
+func LogLevel() klog.Level {
+	level := GetConf().Kitex.LogLevel
 	switch level {
 	case "trace":
-		return hlog.LevelTrace
+		return klog.LevelTrace
 	case "debug":
-		return hlog.LevelDebug
+		return klog.LevelDebug
 	case "info":
-		return hlog.LevelInfo
+		return klog.LevelInfo
 	case "notice":
-		return hlog.LevelNotice
+		return klog.LevelNotice
 	case "warn":
-		return hlog.LevelWarn
+		return klog.LevelWarn
 	case "error":
-		return hlog.LevelError
+		return klog.LevelError
 	case "fatal":
-		return hlog.LevelFatal
+		return klog.LevelFatal
 	default:
-		return hlog.LevelInfo
+		return klog.LevelInfo
 	}
 }

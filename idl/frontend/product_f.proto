@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package frontend.product;
+
+import "frontend/api.proto";
+import "frontend/common.proto";
+
+option go_package = "/frontend/product";
+
+service ProductService {
+  rpc ProductList(ListProductsReq) returns (ListProductsResp) {
+    option (api.get) = "/product/list";
+  }
+
+  rpc ProductGet(GetProductReq) returns (GetProductResp) {
+	option (api.get) = "/product/get";
+  }
+
+  rpc ProductSearch(SearchProductsReq) returns (SearchProductsResp) {
+	option (api.get) = "/product/search";
+  }
+
+  rpc ProductCreate(CreateProductReq) returns (CreateProductResp) {
+	option (api.post) = "/product/create";
+  }
+
+  rpc ProductUpdate(UpdateProductReq) returns (common.Response) {
+	option (api.post) = "/product/update";
+  }
+
+  rpc ProductDelete(DeleteProductReq) returns (common.Response) {
+	option (api.post) = "/product/delete";
+  }
+
+  rpc CategoryCreate(CreateCategoryReq) returns (CreateCategoryResp) {
+	option (api.post) = "/category/create";
+  }
+
+  rpc CategoryList(common.Empty) returns (ListCategoriesResp) {
+	option (api.get) = "/category/list";
+  }
+
+  rpc CategoryDelete(DeleteCategoryReq) returns (common.Response) {
+	option (api.post) = "/category/delete";
+  }
+
+  rpc CategoryUpdate(UpdateCategoryReq) returns (common.Response) {
+	option (api.post) = "/category/update";
+  }
+}
+
+message Product {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  string picture = 4;
+  float price = 5;
+
+  repeated Category categories = 6;
+}
+
+message Category {
+  int64 id = 1;
+  string name = 2;
+}
+
+message ListProductsReq {
+  int32 page = 1 [ (api.query) = "page,required" ];
+  int32 pageSize = 2 [ (api.query) = "page_size,required" ];
+
+  int64 categoryId = 3 [ (api.query) = "category_id,required" ];
+}
+
+message ListProductsResp {
+  string message = 1;
+  repeated Product products = 2;
+}
+
+message GetProductReq { int64 id = 1 [ (api.query) = "id" ]; }
+
+message GetProductResp {
+  string message = 1;
+  Product product = 2;
+}
+
+message SearchProductsReq { string query = 1 [ (api.query) = "query" ]; }
+
+message SearchProductsResp {
+  string message = 1;
+  repeated Product results = 2;
+}
+
+message CreateProductReq {
+  string name = 1 [ (api.body) = "name,required" ];
+  string description = 2 [ (api.body) = "description,required" ];
+  string picture = 3 [ (api.body) = "picture,required" ];
+  float price = 4 [ (api.body) = "price,required" ];
+
+  repeated int64 category_ids = 5 [ (api.body) = "category_ids,required" ];
+}
+
+message CreateProductResp {
+  string message = 1;
+  int64 id = 2;
+}
+
+message UpdateProductReq {
+  int64 id = 1 [ (api.body) = "id" ];
+  string name = 2 [ (api.body) = "name" ];
+  string description = 3 [ (api.body) = "description" ];
+  string picture = 4 [ (api.body) = "picture" ];
+  float price = 5 [ (api.body) = "price" ];
+
+  repeated int64 category_ids = 6 [ (api.body) = "category_ids" ];
+}
+
+message DeleteProductReq { int64 id = 1 [ (api.query) = "id" ]; }
+
+message CreateCategoryReq { string name = 1 [ (api.body) = "name,required" ]; }
+
+message CreateCategoryResp {
+  string message = 1;
+  int64 id = 2;
+}
+
+message UpdateCategoryReq {
+  int64 id = 1 [ (api.body) = "id" ];
+  string name = 2 [ (api.body) = "name" ];
+}
+
+message DeleteCategoryReq { int64 id = 1 [ (api.query) = "id" ]; }
+
+message ListCategoriesResp {
+  string message = 1;
+  repeated Category categories = 2;
+}
+
+
