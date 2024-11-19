@@ -1,0 +1,25 @@
+server:
+  host: 172.16.53.189
+  port: 9040
+  name: cart
+consul:
+  host: 127.0.0.1
+  port: 8500
+kitex:
+  log_level: debug
+  log_file_name: "log/kitex.log"
+  log_max_size: 10
+  log_max_age: 3
+  log_max_backups: 50
+telemetry:
+  host: 127.0.0.1
+  port: 4317
+mysql:
+  dsn: "%s:%s@tcp(%s:%v)/%s?charset=utf8mb4&parseTime=True&loc=Local"
+  host: 127.0.0.1
+  port: 3306
+  user: root
+  password: root
+  database: order
+metrics:
+  port: 10040
