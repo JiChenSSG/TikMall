@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/go-chassis/foundation/validator"
 	"github.com/kr/pretty"
 	"gopkg.in/yaml.v2"
@@ -15,7 +15,7 @@ import (
 
 type Config struct {
 	Env       string
-	Kitex     Kitex     `yaml:"kitex"`
+	Hertz     Hertz     `yaml:"hertz"`
 	Consul    Consul    `yaml:"consul"`
 	Server    Server    `yaml:"server"`
 	Endpoint  Endpoint  `yaml:"endpoint"`
@@ -23,7 +23,7 @@ type Config struct {
 	Metrics   Metrics   `yaml:"metrics"`
 }
 
-type Kitex struct {
+type Hertz struct {
 	LogLevel      string `yaml:"log_level"`
 	LogFileName   string `yaml:"log_file_name"`
 	LogMaxSize    int    `yaml:"log_max_size"`
@@ -77,11 +77,11 @@ func initConf() {
 	conf = new(Config)
 	err = yaml.Unmarshal(content, conf)
 	if err != nil {
-		klog.Error("parse yaml error - %v", err)
+		hlog.Error("parse yaml error - %v", err)
 		panic(err)
 	}
 	if err := validator.Validate(conf); err != nil {
-		klog.Error("validate config error - %v", err)
+		hlog.Error("validate config error - %v", err)
 		panic(err)
 	}
 	conf.Env = GetEnv()
@@ -93,7 +93,7 @@ func GetEnv() string {
 		func() {
 			err := godotenv.Load()
 			if err != nil {
-				klog.Error("load env error - %v", err)
+				hlog.Error("load env error - %v", err)
 				panic(err)
 			}
 		},
@@ -106,24 +106,24 @@ func GetEnv() string {
 	return e
 }
 
-func LogLevel() klog.Level {
-	level := GetConf().Kitex.LogLevel
+func LogLevel() hlog.Level {
+	level := GetConf().Hertz.LogLevel
 	switch level {
 	case "trace":
-		return klog.LevelTrace
+		return hlog.LevelTrace
 	case "debug":
-		return klog.LevelDebug
+		return hlog.LevelDebug
 	case "info":
-		return klog.LevelInfo
+		return hlog.LevelInfo
 	case "notice":
-		return klog.LevelNotice
+		return hlog.LevelNotice
 	case "warn":
-		return klog.LevelWarn
+		return hlog.LevelWarn
 	case "error":
-		return klog.LevelError
+		return hlog.LevelError
 	case "fatal":
-		return klog.LevelFatal
+		return hlog.LevelFatal
 	default:
-		return klog.LevelInfo
+		return hlog.LevelInfo
 	}
 }

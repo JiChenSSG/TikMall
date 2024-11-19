@@ -27,6 +27,7 @@ func (s *ProductCatalogServiceImpl) ListProducts(ctx context.Context, req *produ
 
 	products, err := model.ListProducts(mysql.GetDB(), ctx, page, pageSize, catrgoryId)
 	if err != nil {
+		klog.Errorf("UpdateCategory service err: %v", err)
 		err = kerrors.NewBizStatusError(500, "list products failed")
 		return
 	}
@@ -52,6 +53,7 @@ func (s *ProductCatalogServiceImpl) GetProduct(ctx context.Context, req *product
 
 	p, err := model.GetProduct(mysql.GetDB(), ctx, id)
 	if err != nil {
+		klog.Errorf("UpdateCategory service err: %v", err)
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			err = kerrors.NewBizStatusError(400, "product not exists")
 		} else {
@@ -65,8 +67,6 @@ func (s *ProductCatalogServiceImpl) GetProduct(ctx context.Context, req *product
 		Product: product2resp(p),
 	}
 
-
-
 	return
 }
 
@@ -79,6 +79,7 @@ func (s *ProductCatalogServiceImpl) SearchProducts(ctx context.Context, req *pro
 
 	products, err := model.SearchProducts(mysql.GetDB(), ctx, keyword)
 	if err != nil {
+		klog.Errorf("UpdateCategory service err: %v", err)
 		err = kerrors.NewBizStatusError(500, "search products failed")
 	}
 
@@ -95,6 +96,7 @@ func (s *ProductCatalogServiceImpl) SearchProducts(ctx context.Context, req *pro
 }
 
 // CreateProduct implements the ProductCatalogServiceImpl interface.
+
 func (s *ProductCatalogServiceImpl) CreateProduct(ctx context.Context, req *product.CreateProductReq) (resp *product.CreateProductResp, err error) {
 	klog.Infof("CreateProduct service")
 
@@ -121,6 +123,7 @@ func (s *ProductCatalogServiceImpl) CreateProduct(ctx context.Context, req *prod
 
 	err = model.CreateProduct(mysql.GetDB(), ctx, p)
 	if err != nil {
+		klog.Errorf("UpdateCategory service err: %v", err)
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			err = kerrors.NewBizStatusError(400, "product already exists")
 		} else {
@@ -166,11 +169,17 @@ func (s *ProductCatalogServiceImpl) UpdateProduct(ctx context.Context, req *prod
 	err = model.UpdateProduct(mysql.GetDB(), ctx, p)
 
 	if err != nil {
+		klog.Errorf("UpdateCategory service err: %v", err)
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			err = kerrors.NewBizStatusError(400, "product not exists")
 		} else {
 			err = kerrors.NewBizStatusError(500, "update product failed")
 		}
+	}
+
+	// detect if product is deleted
+	if p.DeletedAt.Valid {
+		err = kerrors.NewBizStatusError(400, "product not exists")
 	}
 
 	resp = &product.UpdateProductResp{}
@@ -187,6 +196,7 @@ func (s *ProductCatalogServiceImpl) DeleteProduct(ctx context.Context, req *prod
 
 	err = model.DeleteProduct(mysql.GetDB(), ctx, id)
 	if err != nil {
+		klog.Errorf("UpdateCategory service err: %v", err)
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			err = kerrors.NewBizStatusError(400, "product not exists")
 		} else {
@@ -197,7 +207,7 @@ func (s *ProductCatalogServiceImpl) DeleteProduct(ctx context.Context, req *prod
 	}
 
 	resp = &product.DeleteProductResp{}
-	
+
 	return
 }
 
@@ -214,6 +224,7 @@ func (s *ProductCatalogServiceImpl) CreateCategory(ctx context.Context, req *pro
 
 	err = model.CreateCategory(mysql.GetDB(), ctx, category)
 	if err != nil {
+		klog.Errorf("UpdateCategory service err: %v", err)
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			err = kerrors.NewBizStatusError(400, "category already exists")
 		} else {
@@ -237,6 +248,7 @@ func (s *ProductCatalogServiceImpl) ListCategories(ctx context.Context, req *pro
 	categories, err := model.ListCategories(mysql.GetDB(), ctx)
 
 	if err != nil {
+		klog.Errorf("UpdateCategory service err: %v", err)
 		err = kerrors.NewBizStatusError(500, "list categories failed")
 		return
 	}
@@ -265,6 +277,8 @@ func (s *ProductCatalogServiceImpl) DeleteCategory(ctx context.Context, req *pro
 
 	err = model.DeleteCategory(mysql.GetDB(), ctx, id)
 	if err != nil {
+		klog.Errorf("UpdateCategory service err: %v", err)
+
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			err = kerrors.NewBizStatusError(400, "category not exists")
 		} else {
@@ -294,11 +308,18 @@ func (s *ProductCatalogServiceImpl) UpdateCategory(ctx context.Context, req *pro
 
 	err = model.UpdateCategory(mysql.GetDB(), ctx, category)
 	if err != nil {
+		klog.Errorf("UpdateCategory service err: %v", err)
+
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			err = kerrors.NewBizStatusError(400, "category not exists")
 		} else {
 			err = kerrors.NewBizStatusError(500, "update category failed")
 		}
+	}
+
+	// detect if category is deleted
+	if category.DeletedAt.Valid {
+		err = kerrors.NewBizStatusError(400, "category not exists")
 	}
 
 	resp = &product.UpdateCategoryResp{}

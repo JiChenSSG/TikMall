@@ -2,9 +2,10 @@ module github.com/jichenssg/tikmall/app/common
 
 go 1.22.2
 
+replace github.com/jichenssg/tikmall/gen => ../../gen
+
 require (
 	github.com/cloudwego/kitex v0.11.3
-	github.com/jichenssg/tikmall/app/user v0.0.0-20241117044501-64630d912002
 	github.com/jichenssg/tikmall/gen v0.0.0-20241117044501-64630d912002
 	github.com/kanhai-syd/hailog v0.0.0-20241111050534-02944a3c918f
 	github.com/kitex-contrib/obs-opentelemetry v0.2.8
@@ -34,7 +35,6 @@ require (
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.7.0 // indirect
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.32.0 // indirect
-	gorm.io/plugin/soft_delete v1.2.1 // indirect
 )
 
 require (

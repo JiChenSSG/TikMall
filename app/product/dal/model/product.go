@@ -23,19 +23,25 @@ func CreateProduct(db *gorm.DB, ctx context.Context, product *Product) (err erro
 }
 
 func GetProduct(db *gorm.DB, ctx context.Context, id int64) (product *Product, err error) {
+	product = &Product{}
 	return product, db.WithContext(ctx).Preload("Categories").First(product, id).Error
 }
 
 func UpdateProduct(db *gorm.DB, ctx context.Context, product *Product) (err error) {
 	tx := db.WithContext(ctx).Begin()
-	if err = tx.Model(product).Association("Categories").Replace(product.Categories); err != nil {
-		tx.Rollback()
-		return
+
+	tx = tx.Debug()
+
+	if product.Categories != nil {
+		if err = tx.Model(product).Association("Categories").Replace(product.Categories); err != nil {
+			tx.Rollback()
+			return
+		}
+
+		product.Categories = nil
 	}
 
-	product.Categories = nil
-
-	if err = tx.Model(product).Updates(product).Error; err != nil {
+	if err = tx.Model(&Product{}).Where("id = ?", product.ID).Updates(product).Error; err != nil {
 		tx.Rollback()
 		return
 	}
@@ -48,9 +54,16 @@ func DeleteProduct(db *gorm.DB, ctx context.Context, id int64) (err error) {
 }
 
 func ListProducts(db *gorm.DB, ctx context.Context, page int, pageSize int, categoryId int64) (products []Product, err error) {
-	return products, db.WithContext(ctx).Preload("Categories").Where("category_id = ?", categoryId).Limit(pageSize).Offset((page - 1) * pageSize).Find(&products).Error
+	return products, db.WithContext(ctx).
+		Preload("Categories").
+		Joins("JOIN category_products ON products.id = category_products.product_id").
+		Where("category_products.category_id = ?", categoryId).
+		Limit(pageSize).
+		Offset((page - 1) * pageSize).
+		Find(&products).
+		Error
 }
 
 func SearchProducts(db *gorm.DB, ctx context.Context, keyword string) (products []Product, err error) {
-	return products, db.WithContext(ctx).Preload("Categories").Where("name like ? OR descrpition like ?", "%"+keyword+"%", "%"+keyword+"%").Find(&products).Error
+	return products, db.WithContext(ctx).Preload("Categories").Where("name like ? OR description like ?", "%"+keyword+"%", "%"+keyword+"%").Find(&products).Error
 }
