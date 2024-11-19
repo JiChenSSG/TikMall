@@ -25,15 +25,16 @@ func (s *CartServiceImpl) AddItem(ctx context.Context, req *cart.AddItemReq) (re
 
 	klog.Debugf("AddItem service userID: %v, productID: %v, quantity: %v", userID, productID, quantity)
 
+	var c *model.Cart
+
 	for retry := 0; retry < 3; retry++ {
 		if retry > 0 {
 			klog.Warn("AddItem service retry")
 		}
 
-		var cart *model.Cart
-		cart, err = model.GetCartByUserIDAndProductID(mysql.GetDB(), ctx, userID, productID)
+		c, err = model.GetCartByUserIDAndProductID(mysql.GetDB(), ctx, userID, productID)
 		if err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
 				klog.Errorf("AddItem service err: %v", err)
 				err = kerrors.NewBizStatusError(500, "get cart failed")
 				return nil, err
@@ -50,20 +51,30 @@ func (s *CartServiceImpl) AddItem(ctx context.Context, req *cart.AddItemReq) (re
 				err = kerrors.NewBizStatusError(500, "add item failed")
 				continue
 			}
-		}
+		} else {
+			result := mysql.GetDB().WithContext(ctx).Model(&model.Cart{}).
+				Where("id = ? AND version = ?", c.ID, c.Version).
+				Updates(map[string]interface{}{
+					"quantity": c.Quantity + quantity,
+					"version":  c.Version + 1,
+				})
 
-		cart.Quantity += quantity
-		err = mysql.GetDB().WithContext(ctx).Model(cart).Model(&model.Cart{}).
-			Where("id = ? AND version = ?", cart.ID, cart.Version).
-			Updates(map[string]interface{}{
-				"quantity": cart.Quantity,
-				"version":  cart.Version + 1,
-			}).Error
+			if result.Error != nil {
+				klog.Errorf("AddItem service err: %v", result.Error)
+				err = kerrors.NewBizStatusError(500, "add item failed")
+				return nil, err
+			}
 
-		if err != nil {
-			klog.Errorf("AddItem service err: %v", err)
-			err = kerrors.NewBizStatusError(500, "add item failed")
-			continue
+			if result.RowsAffected == 0 {
+				klog.Warn("AddItem service version conflict")
+				continue
+			}
+
+			if err != nil {
+				klog.Errorf("AddItem service err: %v", err)
+				err = kerrors.NewBizStatusError(500, "add item failed")
+				continue
+			}
 		}
 
 		break
@@ -74,9 +85,11 @@ func (s *CartServiceImpl) AddItem(ctx context.Context, req *cart.AddItemReq) (re
 		err = kerrors.NewBizStatusError(500, "add item failed")
 	}
 
-	resp = &cart.AddItemResp{}
+	resp = &cart.AddItemResp{
+		Id: c.ID,
+	}
 
-	return
+	return resp, nil
 }
 
 // GetCart implements the CartServiceImpl interface.

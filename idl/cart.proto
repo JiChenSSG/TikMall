@@ -20,7 +20,7 @@ message AddItemReq {
   CartItem item = 2;
 }
 
-message AddItemResp {}
+message AddItemResp { int64 id = 1; }
 
 message EmptyCartReq { int64 user_id = 1; }
 

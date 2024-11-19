@@ -8,8 +8,8 @@ import (
 
 type Cart struct {
 	ID        int64 `gorm:"primary_key"`
-	UserId    int64 `gorm:"index"`
-	ProductId int64
+    UserId    int64 `gorm:"index:idx_user_product,unique"`
+    ProductId int64 `gorm:"index:idx_user_product,unique"`
 	Quantity  int
 	Version   int
 	gorm.Model

@@ -4,6 +4,7 @@ p, user, ^/auth/.*, *
 p, user, /product/list, GET
 p, user, /product/get, GET
 p, user, /product/search, GET
+p, user, /cart/.*, *
 p, anonymous, /auth/login, POST
 p, anonymous, /auth/register, POST
 p, anonymous, /auth/refresh, POST

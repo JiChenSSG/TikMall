@@ -44,7 +44,7 @@ func ProductList(ctx context.Context, c *app.RequestContext) {
 
 	productList := make([]*product.Product, 0, len(products.Products))
 	for _, p := range products.Products {
-		productList = append(productList, product2resp(p))
+		productList = append(productList, utils.Product2resp(p))
 	}
 
 	resp := &product.ListProductsResp{
@@ -82,7 +82,7 @@ func ProductGet(ctx context.Context, c *app.RequestContext) {
 
 	resp := &product.GetProductResp{
 		Message: "get product success",
-		Product: product2resp(p.Product),
+		Product: utils.Product2resp(p.Product),
 	}
 
 	c.JSON(consts.StatusOK, resp)
@@ -115,7 +115,7 @@ func ProductSearch(ctx context.Context, c *app.RequestContext) {
 
 	productList := make([]*product.Product, 0, len(products.Results))
 	for _, p := range products.Results {
-		productList = append(productList, product2resp(p))
+		productList = append(productList, utils.Product2resp(p))
 	}
 
 	resp := &product.SearchProductsResp{
@@ -287,7 +287,7 @@ func CategoryList(ctx context.Context, c *app.RequestContext) {
 
 	categoryList := make([]*product.Category, 0, len(categories.Categories))
 	for _, c := range categories.Categories {
-		categoryList = append(categoryList, category2resp(c))
+		categoryList = append(categoryList, utils.Category2resp(c))
 	}
 
 	resp := &product.ListCategoriesResp{
@@ -361,30 +361,4 @@ func CategoryUpdate(ctx context.Context, c *app.RequestContext) {
 	}
 
 	c.JSON(consts.StatusOK, resp)
-}
-
-func product2resp(p *productrpc.Product) (res *product.Product) {
-	res = &product.Product{
-		Id:          p.Id,
-		Name:        p.Name,
-		Description: p.Description,
-		Price:       p.Price,
-		Categories: func() (categories []*product.Category) {
-			for _, c := range p.Categories {
-				categories = append(categories, category2resp(c))
-			}
-			return
-		}(),
-	}
-
-	return
-}
-
-func category2resp(c *productrpc.Category) (res *product.Category) {
-	res = &product.Category{
-		Id:   c.Id,
-		Name: c.Name,
-	}
-
-	return
 }
