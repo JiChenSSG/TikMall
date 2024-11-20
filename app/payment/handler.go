@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/cloudwego/kitex/pkg/kerrors"
 	"github.com/cloudwego/kitex/pkg/klog"
 	creditcard "github.com/durango/go-credit-card"
 	"github.com/google/uuid"
@@ -38,6 +39,7 @@ func (s *PaymentServiceImpl) Charge(ctx context.Context, req *payment.ChargeReq)
 	err = cardValidator.Validate()
 	if err != nil {
 		klog.Errorf("Charge service card validate failed: %v", err)
+		err = kerrors.NewBizStatusError(400, "card validate failed")
 		return nil, err
 	}
 
@@ -59,7 +61,6 @@ func (s *PaymentServiceImpl) Charge(ctx context.Context, req *payment.ChargeReq)
 
 		break
 	}
-
 	if err != nil {
 		klog.Errorf("Charge service err: %v", err)
 		return nil, err

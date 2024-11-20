@@ -13,7 +13,7 @@ type PayLog struct {
 	Amount        float32
 	TranscationID string
 
-	PayAt string `gorm:"autoCreateTime"`
+	PayAt gorm.DeletedAt `gorm:"autoCreateTime"`
 }
 
 func CreatePayLog(db *gorm.DB, ctx context.Context, payLog *PayLog) error {

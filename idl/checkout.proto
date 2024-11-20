@@ -13,6 +13,7 @@ service CheckoutService {
 
 message CheckoutReq {
   int64 user_id = 1;
+  string order_id = 2;
   payment.CreditCardInfo credit_card = 6;
 }
 

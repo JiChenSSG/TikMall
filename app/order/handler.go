@@ -52,6 +52,7 @@ func (s *OrderServiceImpl) PlaceOrder(ctx context.Context, req *order.PlaceOrder
 			return itemsModel
 		}(),
 		OrderID: uuid.NewString(),
+		OrderState: model.OrderStatePlaced,
 	}
 
 	for retry := 0; retry < 3; retry++ {
@@ -261,5 +262,5 @@ func (s *OrderServiceImpl) UpdateOrderInfo(ctx context.Context, req *order.Updat
 }
 
 func checkTimeout(o *model.Order) (ok bool) {
-	return time.Since(o.CreatedAt) < time.Duration(config.GetConf().Order.CancelTimeout)*time.Minute && o.Consignee.State == string(model.OrderStatePlaced)
+	return time.Since(o.CreatedAt) < time.Duration(config.GetConf().Order.CancelTimeout)*time.Minute || o.Consignee.State != string(model.OrderStatePlaced)
 }

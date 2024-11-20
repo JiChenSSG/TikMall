@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package frontend.checkout;
+
+import "frontend/api.proto";
+// import "frontend/common.proto";
+
+option go_package = "/frontend/checkout";
+
+service CheckoutService {
+  rpc Checkout(CheckoutReq) returns (CheckoutResp) {
+    option (api.post) = "/checkout";
+  }
+}
+
+message CheckoutReq {
+  string order_id = 2 [ (api.body) = "order_id,required" ];
+  string card_number = 3 [ (api.body) = "card_number,required" ];
+  int32 cvv = 4 [ (api.body) = "cvv,required" ];
+  int32 expiration_year = 5 [ (api.body) = "expiration_year,required" ];
+  int32 expiration_month = 6 [ (api.body) = "expiration_month,required" ];
+}
+
+message CheckoutResp {
+  string message = 1;
+  string transaction_id = 2;
+}
