@@ -20,6 +20,7 @@ require (
 	github.com/kr/pretty v0.3.1
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	gopkg.in/yaml.v2 v2.4.0
+	gorm.io/gorm v1.25.12
 )
 
 require (
@@ -121,6 +122,5 @@ require (
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/mysql v1.5.7 // indirect
-	gorm.io/gorm v1.25.12 // indirect
 	gorm.io/plugin/opentelemetry v0.1.8 // indirect
 )

@@ -12,7 +12,9 @@ replace github.com/golang/protobuf => github.com/golang/protobuf v1.5.4
 
 require (
 	github.com/cloudwego/kitex v0.11.3
+	github.com/durango/go-credit-card v0.0.0-20220404131259-a9e175ba4082
 	github.com/go-chassis/foundation v0.4.0
+	github.com/google/uuid v1.6.0
 	github.com/jichenssg/tikmall/app/common v0.0.0-00010101000000-000000000000
 	github.com/jichenssg/tikmall/gen v0.0.0-20241117044501-64630d912002
 	github.com/joho/godotenv v1.5.1
@@ -20,6 +22,7 @@ require (
 	github.com/kr/pretty v0.3.1
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	gopkg.in/yaml.v2 v2.4.0
+	gorm.io/gorm v1.25.12
 )
 
 require (
@@ -122,6 +125,5 @@ require (
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/mysql v1.5.7 // indirect
-	gorm.io/gorm v1.25.12 // indirect
 	gorm.io/plugin/opentelemetry v0.1.8 // indirect
 )
