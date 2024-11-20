@@ -61,4 +61,17 @@ http请求由网关处理，通过consul服务发现，路由到对应的服务�
 
 测试文件在`doc/TikMall.postman_collection.json`，导入postman即可使用。
 
+## 项目初始化
+
+```shell
+# 初始化docker
+docker-compose up -d
+
+# 复制env
+make init-env
+
+# go mod tidy
+make tidy
+```
+
 
