@@ -7,6 +7,7 @@ import (
 	"github.com/jichenssg/tikmall/app/common/clientsuite"
 	"github.com/jichenssg/tikmall/gen/kitex_gen/auth/authservice"
 	"github.com/jichenssg/tikmall/gen/kitex_gen/cart/cartservice"
+	"github.com/jichenssg/tikmall/gen/kitex_gen/order/orderservice"
 	"github.com/jichenssg/tikmall/gen/kitex_gen/product/productcatalogservice"
 	"github.com/jichenssg/tikmall/gen/kitex_gen/user/userservice"
 )
@@ -16,6 +17,7 @@ var (
 	UserClient    userservice.Client
 	ProductClient productcatalogservice.Client
 	CartClient    cartservice.Client
+	OrderClient   orderservice.Client
 	Once          sync.Once
 )
 
@@ -30,6 +32,7 @@ func Init(serviceName, registryEndpoint, otelEndpoint string) {
 	initUserClient(commonClientSuite)
 	initProductClient(commonClientSuite)
 	initCartClient(commonClientSuite)
+	initOrderClient(commonClientSuite)
 
 }
 
@@ -73,6 +76,18 @@ func initCartClient(suite client.Option) {
 	var err error
 	CartClient, err = cartservice.NewClient(
 		"cart",
+		suite,
+	)
+
+	if err != nil {
+		panic(err)
+	}
+}
+
+func initOrderClient(suite client.Option) {
+	var err error
+	OrderClient, err = orderservice.NewClient(
+		"order",
 		suite,
 	)
 

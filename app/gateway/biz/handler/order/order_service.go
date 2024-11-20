@@ -6,13 +6,23 @@ import (
 	"context"
 
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/jichenssg/tikmall/app/common/client"
 	common "github.com/jichenssg/tikmall/app/gateway/biz/model/frontend/common"
+	order "github.com/jichenssg/tikmall/app/gateway/biz/model/frontend/order"
+	"github.com/jichenssg/tikmall/app/gateway/utils"
+
+	cartrpc "github.com/jichenssg/tikmall/gen/kitex_gen/cart"
+	orderrpc "github.com/jichenssg/tikmall/gen/kitex_gen/order"
+	productrpc "github.com/jichenssg/tikmall/gen/kitex_gen/product"
 )
 
 // OrderList .
 // @router /order [GET]
 func OrderList(ctx context.Context, c *app.RequestContext) {
+	hlog.Infof("OrderList service")
+
 	var err error
 	var req common.Empty
 	err = c.BindAndValidate(&req)
@@ -21,7 +31,176 @@ func OrderList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(common.Response)
+	userID := c.GetInt64("user_id")
+	hlog.CtxDebugf(ctx, "OrderList service userID: %v", userID)
+
+	orderclient := client.OrderClient
+	resp, err := orderclient.ListOrder(ctx, &orderrpc.ListOrderReq{
+		UserId: userID,
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+	}
+
+	c.JSON(consts.StatusOK, map[string]interface{}{
+		"message": "list order success",
+		"data":    resp,
+	})
+}
+
+// PlaceOrder .
+// @router /order [POST]
+func PlaceOrder(ctx context.Context, c *app.RequestContext) {
+	hlog.Infof("PlaceOrder service")
+
+	var err error
+	var req order.PlaceOrderReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	userID := c.GetInt64("user_id")
+	hlog.CtxDebugf(ctx, "PlaceOrder service userID: %v, email: %v", userID, req.Email)
+
+	cartclient := client.CartClient
+	cartresp, err := cartclient.GetCart(ctx, &cartrpc.GetCartReq{
+		UserId: userID,
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	orderItems := make([]*orderrpc.OrderItem, 0, len(cartresp.Cart.Items))
+	for _, item := range cartresp.Cart.Items {
+		orderItem := &orderrpc.OrderItem{
+			Item: item,
+		}
+
+		// get product info
+		productclient := client.ProductClient
+		productresp, err := productclient.GetProduct(ctx, &productrpc.GetProductReq{
+			Id: item.ProductId,
+		})
+
+		if err != nil {
+			c.JSON(utils.ParseRpcError(err))
+			return
+		}
+
+		// calculate cost
+		orderItem.Cost = productresp.Product.Price * float32(item.Quantity)
+		orderItems = append(orderItems, orderItem)
+	}
+
+	orderclient := client.OrderClient
+	placeorderresp, err := orderclient.PlaceOrder(ctx, &orderrpc.PlaceOrderReq{
+		UserId: userID,
+		Email:  req.Email,
+		Address: &orderrpc.Address{
+			StreetAddress: req.StreetAddress,
+			City:          req.City,
+			State:         req.State,
+			Country:       req.Country,
+			ZipCode:       req.ZipCode,
+		},
+		// transform order items
+		OrderItems: orderItems,
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	// empty cart
+	_, err = cartclient.EmptyCart(ctx, &cartrpc.EmptyCartReq{
+		UserId: userID,
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	c.JSON(consts.StatusOK, map[string]interface{}{
+		"message":  "place order success",
+		"order_id": placeorderresp.Order.OrderId,
+	})
+}
+
+// CancelOrder .
+// @router /order/cancel [POST]
+func CancelOrder(ctx context.Context, c *app.RequestContext) {
+	hlog.Infof("CancelOrder service")
+
+	var err error
+	var req order.CancelOrderReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	hlog.CtxDebugf(ctx, "CancelOrder service orderID: %v", req.OrderId)
+
+	orderclient := client.OrderClient
+	_, err = orderclient.MarkOrderCancelled(ctx, &orderrpc.CancelOrderReq{
+		OrderId: req.OrderId,
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	resp := &common.Response{
+		Message: "cancel order success",
+	}
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// UpdateOrderInfo .
+// @router /order/update [POST]
+func UpdateOrderInfo(ctx context.Context, c *app.RequestContext) {
+	hlog.Infof("UpdateOrderInfo service")
+
+	var err error
+	var req order.UpdateOrderInfoReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	hlog.CtxDebugf(ctx, "UpdateOrderInfo service orderID: %v", req.OrderId)
+
+	orderclient := client.OrderClient
+	_, err = orderclient.UpdateOrderInfo(ctx, &orderrpc.UpdateOrderInfoReq{
+		OrderId: req.OrderId,
+		Email:   req.Email,
+		Address: &orderrpc.Address{
+			StreetAddress: req.StreetAddress,
+			City:          req.City,
+			State:         req.State,
+			Country:       req.Country,
+			ZipCode:       req.ZipCode,
+		},
+	})
+
+	if err != nil {
+		c.JSON(utils.ParseRpcError(err))
+		return
+	}
+
+	resp := &common.Response{
+		Message: "update order info success",
+	}
 
 	c.JSON(consts.StatusOK, resp)
 }

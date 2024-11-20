@@ -17,5 +17,11 @@ import (
 func Register(r *server.Hertz) {
 
 	root := r.Group("/", rootMw()...)
-	root.GET("/order", append(_orderlistMw(), order.OrderList)...)
+	{
+		_order := root.Group("/order", _orderMw()...)
+		_order.POST("/cancel", append(_cancelorderMw(), order.CancelOrder)...)
+		_order.POST("/create", append(_placeorderMw(), order.PlaceOrder)...)
+		_order.GET("/list", append(_orderlistMw(), order.OrderList)...)
+		_order.POST("/update", append(_updateorderinfoMw(), order.UpdateOrderInfo)...)
+	}
 }
