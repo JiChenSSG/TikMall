@@ -31,7 +31,7 @@ type Order struct {
 	Consignee  Consignee   `gorm:"embedded"`
 	OrderItems []OrderItem `gorm:"foreignKey:OrderID;references:OrderID"`
 	OrderState OrderState
-	PaidTime   time.Time
+	PaidTime   *time.Time
 
 	gorm.Model
 }
@@ -59,4 +59,12 @@ func PayOrder(db *gorm.DB, ctx context.Context, orderID string) error {
 
 func CancelOrder(db *gorm.DB, ctx context.Context, orderID string) error {
 	return db.WithContext(ctx).Model(&Order{}).Where("order_id = ?", orderID).Update("order_state", OrderStateCanceled).Error
+}
+
+func UpdateOrderState(db *gorm.DB, ctx context.Context, orderID string, state OrderState) error {
+	return db.WithContext(ctx).Model(&Order{}).Where("order_id = ?", orderID).Update("order_state", state).Error
+}
+
+func UpdateOrder(db *gorm.DB, ctx context.Context, order *Order) error {
+	return db.WithContext(ctx).Model(order).Where("order_id = ?", order.OrderID).Updates(order).Error
 }

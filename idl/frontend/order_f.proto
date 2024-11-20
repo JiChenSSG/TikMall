@@ -9,6 +9,44 @@ option go_package = "/frontend/order";
 
 service OrderService {
   rpc OrderList(common.Empty) returns (common.Response) {
-    option (api.get) = "/order";
+    option (api.get) = "/order/list";
+  }
+
+  rpc PlaceOrder(PlaceOrderReq) returns (common.Response) {
+	option (api.post) = "/order/create";
+  }
+
+  rpc CancelOrder(CancelOrderReq) returns (common.Response) {
+	option (api.post) = "/order/cancel";
+  }
+
+  rpc UpdateOrderInfo(UpdateOrderInfoReq) returns (common.Response) {
+	option (api.post) = "/order/update";
   }
 }
+
+message CancelOrderReq { string order_id = 1 [ (api.body) = "order_id,required" ]; }
+
+
+message PlaceOrderReq {
+  string street_address = 6 [ (api.body) = "street_address,required" ];
+  string city = 2 [ (api.body) = "city,required" ];
+  string state = 3 [ (api.body) = "state,required" ];
+  string country = 4 [ (api.body) = "country,required" ];
+  int32 zip_code = 5 [ (api.body) = "zip_code,required" ];
+
+  string email = 8 [ (api.body) = "email,required" ];
+}
+
+message UpdateOrderInfoReq {
+  string order_id = 1 [ (api.body) = "order_id,required" ];
+  string email = 7 [ (api.body) = "email" ];
+
+  string street_address = 6 [ (api.body) = "street_address" ];
+  string city = 2 [ (api.body) = "city" ];
+  string state = 3 [ (api.body) = "state" ];
+  string country = 4 [ (api.body) = "country" ];
+  int32 zip_code = 5 [ (api.body) = "zip_code" ];
+}
+
+message GetOrderReq { string order_id = 1 [ (api.query) = "order_id,required" ]; }

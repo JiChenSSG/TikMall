@@ -21,6 +21,7 @@ type Config struct {
 	Telemetry Telemetry `yaml:"telemetry"`
 	Mysql     Mysql     `yaml:"mysql"`
 	Metrics   Metrics   `yaml:"metrics"`
+	Order     Order     `yaml:"order"`
 }
 
 type Kitex struct {
@@ -58,6 +59,10 @@ type Mysql struct {
 
 type Metrics struct {
 	Port int `yaml:"port"`
+}
+
+type Order struct {
+	CancelTimeout int `yaml:"cancel_timeout"`
 }
 
 var (

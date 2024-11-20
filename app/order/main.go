@@ -44,7 +44,7 @@ func main() {
 		config.GetConf().Mysql.Port,
 		config.GetConf().Mysql.Database,
 	)
-	mysql.GetDB().AutoMigrate(&model.Order{})
+	mysql.GetDB().AutoMigrate(&model.Order{}, &model.OrderItem{})
 
 	client.Init(
 		config.GetConf().Server.Name,

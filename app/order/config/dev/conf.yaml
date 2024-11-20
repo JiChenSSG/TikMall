@@ -1,7 +1,7 @@
 server:
   host: 172.16.53.189
   port: 9040
-  name: cart
+  name: order
 consul:
   host: 127.0.0.1
   port: 8500
@@ -23,3 +23,5 @@ mysql:
   database: order
 metrics:
   port: 10040
+order:
+  cancel_timeout: 15 # minutes
