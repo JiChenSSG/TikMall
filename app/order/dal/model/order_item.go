@@ -5,5 +5,5 @@ type OrderItem struct {
 	OrderID   string `json:"order_id" gorm:"index"`
 	ProductID int64  `json:"product_id"`
 	Quantity  int32  `json:"quantity"`
-	Cost      int64  `json:"cost"`
+	Cost      float32  `json:"cost"`
 }
