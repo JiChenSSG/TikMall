@@ -10,6 +10,8 @@ import (
 	"github.com/jichenssg/tikmall/gen/kitex_gen/order/orderservice"
 	"github.com/jichenssg/tikmall/gen/kitex_gen/product/productcatalogservice"
 	"github.com/jichenssg/tikmall/gen/kitex_gen/user/userservice"
+	"github.com/jichenssg/tikmall/gen/kitex_gen/payment/paymentservice"
+	"github.com/jichenssg/tikmall/gen/kitex_gen/checkout/checkoutservice"
 )
 
 var (
@@ -18,6 +20,8 @@ var (
 	ProductClient productcatalogservice.Client
 	CartClient    cartservice.Client
 	OrderClient   orderservice.Client
+	PaymentClient paymentservice.Client
+	CheckoutClient checkoutservice.Client
 	Once          sync.Once
 )
 
@@ -33,7 +37,8 @@ func Init(serviceName, registryEndpoint, otelEndpoint string) {
 	initProductClient(commonClientSuite)
 	initCartClient(commonClientSuite)
 	initOrderClient(commonClientSuite)
-
+	initPaymentClient(commonClientSuite)
+	initCheckoutClient(commonClientSuite)
 }
 
 func initAuthClient(suite client.Option) {
@@ -88,6 +93,30 @@ func initOrderClient(suite client.Option) {
 	var err error
 	OrderClient, err = orderservice.NewClient(
 		"order",
+		suite,
+	)
+
+	if err != nil {
+		panic(err)
+	}
+}
+
+func initPaymentClient(suite client.Option) {
+	var err error
+	PaymentClient, err = paymentservice.NewClient(
+		"payment",
+		suite,
+	)
+
+	if err != nil {
+		panic(err)
+	}
+}
+
+func initCheckoutClient(suite client.Option) {
+	var err error
+	CheckoutClient, err = checkoutservice.NewClient(
+		"checkout",
 		suite,
 	)
 

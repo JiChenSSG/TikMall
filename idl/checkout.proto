@@ -10,20 +10,10 @@ service CheckoutService {
   rpc Checkout(CheckoutReq) returns (CheckoutResp) {}
 }
 
-message Address {
-  string street_address = 1;
-  string city = 2;
-  string state = 3;
-  string country = 4;
-  string zip_code = 5;
-}
 
 message CheckoutReq {
-  uint32 user_id = 1;
-  string firstname = 2;
-  string lastname = 3;
-  string email = 4;
-  Address address = 5;
+  int64 user_id = 1;
+  string order_id = 2;
   payment.CreditCardInfo credit_card = 6;
 }
 
